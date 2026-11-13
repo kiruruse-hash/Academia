@@ -1,0 +1,1251 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>미궁도시 델포이아</title>
+<meta name="description" content="던전과 아카데미, 신들의 파밀리아가 얽힌 롤플레이 챗봇 '미궁도시 델포이아'의 설정 안내서.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Song+Myung&display=swap" rel="stylesheet">
+<script>
+/* ================================================================
+   이미지·음악 설정 — 이 블록만 고치면 됩니다.
+   ----------------------------------------------------------------
+   IMG_BASE : 젠잇 봇의 {{url}}에 해당하는 이미지 폴더 주소.
+              채팅에서 캐릭터 이미지를 우클릭 → '이미지 주소 복사' 한 뒤
+              맨 끝의 파일 이름(예: KR_1.webp)만 지운 주소를 넣으세요.
+              넣으면 인물 카드가 KR_1.webp 같은 기본 표정 그림으로 채워집니다.
+              비워 두면 그림 자리에 이름 첫 글자가 나옵니다.
+   PORTRAIT : 특정 인물만 다른 그림을 쓰고 싶을 때 주소를 직접 넣으세요.
+              그림이 아직 없는 인물은 첫 글자로 나오고, 같은 폴더에
+              '캐릭터코드_1.webp'(예: GL_1.webp)를 올리면 자동으로 바뀝니다.
+              헤파이스토스·아스클레피오스는 아직 코드가 없어 code를 비워 뒀습니다.
+   HERO_IMG : 맨 위 배경에 깔 대표 이미지 주소(선택).
+   LOGO_IMG : 제목 글자 대신 쓸 로고 이미지 주소(선택).
+   BGM_URL  : 배경 음악 mp3 주소(선택). 넣으면 상단에 재생 버튼이 생깁니다.
+   ================================================================ */
+const IMG_BASE = "https://d3lna1f15u7pcs.cloudfront.net/media/characters/9225f287-f192-4a29-8576-d056d51d8b38/assets/";
+const PORTRAIT = {
+  // 예시: kore: "https://example.com/kore.webp",
+};
+const HERO_IMG = "";
+const LOGO_IMG = "";
+const BGM_URL  = "";
+</script>
+<style>
+:root{
+  --abyss:#0E1430;
+  --lapis:#151D42;
+  --lapis-hi:#1E2858;
+  --gold:#CBA65A;
+  --gold-hi:#E8D29A;
+  --ivory:#ECE5D3;
+  --mist:#A7AEC6;
+  --rule:rgba(203,166,90,.26);
+  --rule-soft:rgba(167,174,198,.16);
+  --garnet:#C45A6A;
+
+  --zeus:#86ACF0; --hades:#D9707F; --poseidon:#55BDB6; --demeter:#A9C46E;
+  --hera:#B99AE3; --artemis:#C9D1E2; --freyja:#EBA586; --hecate:#9F92E6;
+  --persephone:#E58A73; --kore:#F0A2C4; --thor:#E7A04F; --athena:#BFBE8E;
+  --hephaestus:#D98A57; --guild:#A3ABC0; --free:#949DB1;
+  --asclepius:#8FD3B0; --sekhmet:#E2765A; --ptah:#7DB9C8; --hermes:#E6C866;
+  --guest:#6FB7AA;
+
+  --display:"Song Myung","Nanum Myeongjo","Noto Serif KR",serif;
+  --body:"Gowun Dodum","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--abyss);color:var(--ivory);font-family:var(--body);font-size:16.5px;line-height:1.8;word-break:keep-all;overflow-wrap:anywhere;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:var(--gold-hi)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold-hi);outline-offset:3px;border-radius:4px}
+.wrap{max-width:980px;margin-inline:auto;padding-inline:20px}
+@media (max-width:480px){.wrap{padding-inline:16px}}
+h1,h2,h3,h4{font-family:var(--display);font-weight:400;margin:0;line-height:1.3;text-wrap:balance}
+p{margin:0 0 .9em;max-width:38em}
+.muted{color:var(--mist)}
+
+/* ---------- 표지 ---------- */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--rule);background:radial-gradient(120% 90% at 78% 45%,#1B2556 0%,var(--abyss) 62%)}
+.hero.has-img{background:var(--abyss)}
+.hero-img{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.55}
+.hero-img::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--abyss) 8%,rgba(14,20,48,.55) 55%,rgba(14,20,48,.2))}
+.hero-in{position:relative;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);align-items:center;gap:24px;min-height:min(86vh,720px);padding-block:56px}
+.hero-copy{position:relative;z-index:2}
+.hero h1{font-size:clamp(3rem,9.5vw,6.4rem);line-height:1.04;letter-spacing:-.01em;color:var(--ivory)}
+.hero h1 .ln{display:block}
+.hero .logo{max-width:min(460px,100%);height:auto}
+.hero .lede{margin-top:22px;font-size:1.08rem;color:var(--ivory);max-width:26em}
+.hero .lede2{color:var(--mist);font-size:.98rem;max-width:28em}
+.hero-cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:999px;border:1px solid var(--gold);background:transparent;color:var(--gold-hi);text-decoration:none;cursor:pointer;font-size:.98rem}
+.btn.solid{background:var(--gold);color:var(--abyss);border-color:var(--gold)}
+.btn:hover{background:rgba(203,166,90,.12)}
+.btn.solid:hover{background:var(--gold-hi)}
+.maze{width:100%;max-width:520px;justify-self:end;aspect-ratio:1}
+.maze svg{width:100%;height:100%;overflow:visible}
+.maze .w{fill:none;stroke:var(--gold);stroke-width:1.4;stroke-linecap:round;opacity:.62}
+.maze .core{fill:var(--gold-hi)}
+.maze .halo{fill:url(#halo)}
+.maze .w.draw{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.6s cubic-bezier(.3,.6,.2,1) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.maze .w.draw{animation:none;stroke-dashoffset:0}}
+.hero.has-img .maze{visibility:hidden}
+@media (max-width:760px){
+  .hero-in{grid-template-columns:1fr;min-height:0;padding-block:28px 40px;gap:0}
+  .maze{order:-1;justify-self:center;width:78%;max-width:340px;margin-bottom:-6px}
+  .hero.has-img .maze{display:none}
+}
+
+/* ---------- 탭 ---------- */
+.tabs{position:sticky;top:0;z-index:20;background:rgba(14,20,48,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+.tabs-in{display:flex;align-items:stretch}
+.tablist{display:flex;gap:2px}
+.tab{appearance:none;background:none;border:0;padding:15px 14px 13px;font-family:var(--display);font-size:1.12rem;color:var(--mist);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab[aria-selected="true"]{color:var(--gold-hi);border-bottom-color:var(--gold)}
+.tab:hover{color:var(--ivory)}
+.bgm{margin-left:auto;align-self:center;background:none;border:1px solid var(--rule);border-radius:999px;padding:5px 12px;font-size:.88rem;color:var(--mist);cursor:pointer}
+.bgm[aria-pressed="true"]{color:var(--gold-hi);border-color:var(--gold)}
+@media (max-width:420px){.tab{padding-inline:10px;font-size:1.05rem}}
+
+/* ---------- 공통 패널 ---------- */
+.panel{padding-block:44px 88px}
+.panel[hidden]{display:none}
+.panel h2{font-size:clamp(1.7rem,4.4vw,2.3rem);color:var(--ivory);margin-bottom:10px}
+.panel .intro{color:var(--mist);margin-bottom:30px;max-width:36em}
+.block{margin-top:56px}
+.block>h3{font-size:1.45rem;color:var(--gold-hi);margin-bottom:6px}
+.block>.sub{color:var(--mist);margin-bottom:20px}
+
+/* 개요 */
+.premise p{font-size:1.06rem;max-width:36em}
+.routes{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
+.route{position:relative;padding:24px 22px 22px;background:var(--lapis);border:1px solid var(--rule);border-radius:14px;display:flex;flex-direction:column}
+.route .mark{font-size:1.5rem;line-height:1}
+.route h4{font-size:1.38rem;margin:12px 0 2px;color:var(--ivory)}
+.route .kind{color:var(--gold);font-size:.92rem;margin-bottom:12px}
+.route p{font-size:.98rem}
+.route dl{margin:auto 0 0;padding-top:12px;border-top:1px solid var(--rule-soft);font-size:.92rem}
+.route dl div{display:flex;gap:10px;padding:3px 0}
+.route dt{flex:none;width:3.6em;color:var(--mist)}
+.route dd{margin:0}
+.route.kore{border-color:color-mix(in srgb,var(--kore) 45%,transparent)}
+.route.irina{border-color:color-mix(in srgb,var(--zeus) 45%,transparent)}
+.now{list-style:none;margin:0;padding:0;display:grid;gap:0;border-top:1px solid var(--rule)}
+.now li{padding:14px 0;border-bottom:1px solid var(--rule-soft);display:grid;grid-template-columns:7.5em 1fr;gap:14px}
+.now b{font-family:var(--display);font-weight:400;color:var(--gold-hi)}
+@media (max-width:520px){.now li{grid-template-columns:1fr;gap:2px}}
+.profile{background:var(--lapis);border-left:3px solid var(--gold);padding:18px 22px;border-radius:0 12px 12px 0}
+.profile ol{margin:8px 0 10px;padding-left:1.3em}
+.profile li{padding:2px 0}
+.profile .eg{font-size:.94rem;color:var(--mist);margin:0}
+
+/* 설정: 펼침 항목 */
+.acc{border-top:1px solid var(--rule)}
+.acc details{border-bottom:1px solid var(--rule)}
+.acc summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:1fr auto;align-items:center;gap:14px;padding:18px 2px}
+.acc summary::-webkit-details-marker{display:none}
+.acc summary h3{font-size:1.32rem;color:var(--ivory)}
+.acc summary .hint{display:block;color:var(--mist);font-size:.93rem;margin-top:2px}
+.acc summary .chev{width:26px;height:26px;border:1px solid var(--rule);border-radius:50%;display:grid;place-items:center;color:var(--gold);transition:transform .2s}
+.acc details[open] summary .chev{transform:rotate(45deg)}
+@media (prefers-reduced-motion:reduce){.acc summary .chev{transition:none}}
+.acc summary:hover h3{color:var(--gold-hi)}
+.acc .body{padding:2px 2px 28px}
+.acc .body h4{font-size:1.1rem;color:var(--gold-hi);margin:22px 0 6px}
+.acc .body h4:first-child{margin-top:4px}
+.acc .body ul{margin:0 0 .9em;padding-left:1.15em;max-width:40em}
+.acc .body li{padding:2px 0}
+.acc .body li::marker{color:var(--gold)}
+.kv{display:grid;grid-template-columns:8.5em 1fr;margin:0 0 1em;max-width:44em}
+.kv dt,.kv dd{padding:8px 0;border-bottom:1px solid var(--rule-soft);margin:0}
+.kv dt{color:var(--gold-hi);font-family:var(--display);padding-right:12px}
+@media (max-width:520px){.kv{grid-template-columns:1fr}.kv dt{border-bottom:0;padding-bottom:0}.kv dd{padding-top:2px}}
+.three{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:14px;margin:10px 0 18px}
+.three section{background:var(--lapis);border-radius:12px;padding:16px 18px;border-top:2px solid var(--gold)}
+.three h5{font-family:var(--display);font-weight:400;font-size:1.15rem;margin:0 0 2px;color:var(--ivory)}
+.three .from{color:var(--gold);font-size:.88rem;margin-bottom:8px}
+.three p{font-size:.95rem;margin:0}
+.ladder{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;margin:14px 0 6px;max-width:640px}
+.ladder span{height:30px;border-radius:4px;display:grid;place-items:center;font-size:.85rem;color:var(--abyss);font-variant-numeric:tabular-nums}
+.ladder-key{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;max-width:640px;font-size:.82rem;color:var(--mist);line-height:1.4;margin-bottom:18px}
+.ladder-key span{border-top:1px solid var(--rule);padding-top:5px}
+@media (max-width:520px){.ladder-key{grid-template-columns:1fr 1fr}}
+.fam{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:0 28px;margin-top:8px}
+.fam article{padding:12px 0 12px 14px;border-left:3px solid var(--c,var(--gold));margin:6px 0}
+.fam h5{font-family:var(--display);font-weight:400;font-size:1.12rem;margin:0;color:var(--ivory)}
+.fam h5 small{font-family:var(--body);font-size:.8rem;color:var(--mist);margin-left:6px}
+.fam p{font-size:.93rem;margin:2px 0 0;color:var(--ivory)}
+.fam .emb{color:var(--mist);font-size:.86rem}
+.tbl-wrap{overflow-x:auto;margin:6px 0 16px;max-width:100%}
+table{border-collapse:collapse;min-width:100%;font-size:.94rem}
+th,td{text-align:left;padding:9px 14px 9px 0;border-bottom:1px solid var(--rule-soft);vertical-align:top;white-space:nowrap}
+th{font-family:var(--display);font-weight:400;color:var(--gold-hi);border-bottom-color:var(--rule)}
+td.wrap-ok{white-space:normal;min-width:12em}
+.num{font-variant-numeric:tabular-nums}
+.cal{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px 36px}
+.cal h5{font-family:var(--display);font-weight:400;font-size:1.15rem;margin:8px 0 4px;color:var(--gold-hi)}
+.cal ol{list-style:none;margin:0;padding:0}
+.cal li{display:grid;grid-template-columns:6.4em 1fr;gap:10px;padding:9px 0;border-bottom:1px solid var(--rule-soft)}
+.cal time{font-variant-numeric:tabular-nums;color:var(--gold)}
+.cal li b{font-family:var(--display);font-weight:400;font-size:1.04rem;display:block}
+.cal li span{font-size:.92rem;color:var(--mist)}
+.cal li.break{display:block;color:var(--mist);font-size:.93rem;padding:12px 0 4px}
+
+/* 지도 */
+.mapgrid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:760px){.mapgrid{grid-template-columns:1fr}}
+.city svg{width:100%;height:auto;max-width:520px;display:block;margin-inline:auto}
+.city .sec{cursor:pointer;stroke:var(--abyss);stroke-width:2;transition:filter .15s}
+.city .sec:hover,.city .sec:focus-visible{filter:brightness(1.25);outline:none}
+.city .sec.on{stroke:var(--gold-hi);stroke-width:2.5}
+.city text{font-family:var(--display);fill:var(--ivory);pointer-events:none}
+.city .small{font-family:var(--body);fill:var(--mist);font-size:14px}
+.city .nation{fill:var(--gold);font-size:16px}
+.region{background:var(--lapis);border:1px solid var(--rule);border-radius:14px;padding:22px 22px 18px;min-height:200px}
+.region h4{font-size:1.4rem;color:var(--gold-hi)}
+.region .tag{color:var(--mist);font-size:.92rem;margin-bottom:10px}
+.region ul{margin:0;padding-left:1.1em}
+.region li{padding:3px 0}
+.region li::marker{color:var(--gold)}
+.region .who{margin-top:12px;font-size:.92rem;color:var(--mist)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+.chip{border:1px solid var(--rule);background:transparent;border-radius:999px;padding:6px 14px;font-size:.93rem;color:var(--mist);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:var(--abyss)}
+.chip:hover{color:var(--ivory)}
+.chip[aria-pressed="true"]:hover{color:var(--abyss)}
+
+.descent{margin-top:18px;border-radius:16px;overflow:hidden;border:1px solid var(--rule)}
+.stratum{background:var(--bg);border-bottom:1px solid rgba(0,0,0,.35)}
+.stratum:last-child{border-bottom:0}
+.stratum summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:5.4em 1fr auto;gap:14px;align-items:center;padding:16px 18px}
+.stratum summary::-webkit-details-marker{display:none}
+.stratum .fl{font-variant-numeric:tabular-nums;color:var(--fg2,var(--mist));font-size:.92rem;line-height:1.3}
+.stratum .nm{font-family:var(--display);font-size:1.22rem;line-height:1.3}
+.stratum .nm small{display:block;font-family:var(--body);font-size:.86rem;color:var(--fg2,var(--mist))}
+.stratum .boss{font-size:.86rem;border:1px solid rgba(232,210,154,.4);border-radius:999px;padding:3px 10px;color:var(--gold-hi);white-space:nowrap}
+.stratum .in{padding:0 18px 18px calc(5.4em + 32px)}
+.stratum .in ul{margin:0;padding-left:1.1em}
+.stratum .in li{padding:2px 0}
+.stratum .in li::marker{color:var(--gold)}
+.stratum .in p{font-size:.96rem}
+.stratum.thin summary{padding-block:10px}
+.stratum.thin .nm{font-size:1.05rem}
+.stratum[open]{box-shadow:inset 3px 0 0 var(--gold)}
+@media (max-width:560px){
+  .stratum summary{grid-template-columns:4.2em 1fr;row-gap:6px}
+  .stratum .boss{grid-column:2;justify-self:start}
+  .stratum .in{padding:0 16px 16px 16px}
+}
+.echo{margin-top:22px;padding:16px 20px;border:1px dashed var(--rule);border-radius:12px;color:var(--ivory)}
+.echo b{font-family:var(--display);font-weight:400;color:var(--gold-hi)}
+
+/* 인물 */
+.people{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:18px 16px;margin-top:22px}
+@media (max-width:420px){.people{grid-template-columns:1fr 1fr;gap:14px 12px}}
+.card[hidden]{display:none}
+.card{appearance:none;text-align:left;background:none;border:0;padding:0;cursor:pointer;display:flex;flex-direction:column;gap:9px}
+.pic{position:relative;aspect-ratio:3/4;border-radius:12px;overflow:hidden;background:var(--lapis);border:1px solid color-mix(in srgb,var(--c) 40%,transparent)}
+.pic img{position:relative;z-index:1;width:100%;height:100%;object-fit:cover;object-position:50% 18%;background:#fff}
+.pic .ph{position:absolute;inset:0;display:grid;place-items:center;background:
+  radial-gradient(80% 60% at 50% 35%,color-mix(in srgb,var(--c) 22%,transparent),transparent 70%),
+  repeating-radial-gradient(circle at 50% 40%,transparent 0 13px,color-mix(in srgb,var(--c) 10%,transparent) 13px 14px)}
+.pic .ph span{font-family:var(--display);font-size:3.6rem;color:var(--c);opacity:.9;line-height:1}
+.card:hover .pic,.card:focus-visible .pic{border-color:var(--c)}
+.card:focus-visible{outline:none}
+.card:focus-visible .pic{outline:2px solid var(--gold-hi);outline-offset:3px}
+.card .ep{font-size:.84rem;color:var(--c);line-height:1.3}
+.card .nm{font-family:var(--display);font-size:1.16rem;line-height:1.25;color:var(--ivory)}
+.card .rl{font-size:.86rem;color:var(--mist);line-height:1.45}
+
+dialog{border:1px solid var(--rule);border-radius:18px;padding:0;background:var(--lapis);color:var(--ivory);width:min(760px,calc(100vw - 32px));max-height:calc(100dvh - 40px)}
+dialog::backdrop{background:rgba(5,8,22,.72)}
+.dlg{display:grid;grid-template-columns:240px 1fr;gap:0}
+.dlg .pic{border-radius:0;border:0;border-right:1px solid var(--rule);aspect-ratio:auto;min-height:100%}
+.dlg .txt{padding:26px 26px 24px;overflow:auto;max-height:calc(100dvh - 42px)}
+.dlg .ep{color:var(--c);font-size:.93rem}
+.dlg h3{font-size:1.8rem;margin:2px 0 10px}
+.dlg .meta{list-style:none;margin:0 0 16px;padding:0;color:var(--mist);font-size:.94rem;line-height:1.6}
+.dlg blockquote{margin:16px 0 0;padding:12px 16px;border-left:2px solid var(--c);background:rgba(0,0,0,.18);border-radius:0 10px 10px 0;font-size:.98rem}
+.dlg blockquote+blockquote{margin-top:8px}
+.dlg .where{margin-top:16px;font-size:.93rem;color:var(--mist)}
+.dlg .where b{color:var(--gold-hi);font-weight:400;font-family:var(--display)}
+.x{position:absolute;z-index:3;top:10px;right:10px;width:38px;height:38px;border-radius:50%;border:1px solid var(--rule);background:rgba(14,20,48,.8);color:var(--ivory);cursor:pointer;font-size:1.2rem;line-height:1}
+@media (max-width:620px){
+  .dlg{grid-template-columns:1fr}
+  .dlg .pic{aspect-ratio:4/3;border-right:0;border-bottom:1px solid var(--rule);min-height:0}
+  .dlg .pic img{object-position:50% 15%}
+  .dlg .txt{max-height:none;padding:20px 18px 22px}
+  dialog{overflow:auto}
+}
+
+footer{border-top:1px solid var(--rule);padding:28px 0 40px;color:var(--mist);font-size:.9rem}
+footer .en{font-family:var(--display);letter-spacing:.24em;color:var(--gold);margin-right:10px}
+/* ---------- 갱신 추가분 ---------- */
+.hero .en{font-family:var(--display);color:var(--gold);letter-spacing:.32em;text-transform:uppercase;font-size:clamp(.82rem,2.2vw,1.02rem);margin:14px 0 0}
+.route.artemis{border-color:color-mix(in srgb,var(--artemis) 45%,transparent)}
+.route.god{border-color:color-mix(in srgb,var(--gold) 70%,transparent)}
+.route.prof{border-color:color-mix(in srgb,var(--athena) 50%,transparent)}
+.route.poseidon{border-color:color-mix(in srgb,var(--poseidon) 45%,transparent)}
+.route.freyja{border-color:color-mix(in srgb,var(--freyja) 45%,transparent)}
+.route .tagline{display:inline-block;font-size:.8rem;color:var(--abyss);background:var(--gold);border-radius:999px;padding:1px 9px;margin-left:6px;vertical-align:2px}
+.profile .modes{margin:12px 0 0;padding:12px 0 0;border-top:1px solid var(--rule-soft);display:grid;gap:6px;font-size:.95rem}
+.profile .modes b{font-family:var(--display);font-weight:400;color:var(--gold-hi);margin-right:6px}
+.fam article.locked{border-left-style:dashed;opacity:.82}
+.fam article.locked h5{color:var(--mist)}
+.pgroup{margin-top:44px}
+.pgroup[hidden]{display:none}
+.pgroup:first-of-type{margin-top:26px}
+.pgroup>header{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;padding-bottom:10px;border-bottom:1px solid var(--rule)}
+.pgroup>header h3{font-size:1.42rem;color:var(--gold-hi)}
+.pgroup>header .count{font-size:.86rem;color:var(--mist);font-variant-numeric:tabular-nums}
+.pgroup>header p{flex-basis:100%;margin:2px 0 0;color:var(--mist);font-size:.94rem}
+.pgroup .people{margin-top:18px}
+.pgroup.guest>header{border-bottom-style:dashed;border-bottom-color:color-mix(in srgb,var(--guest) 55%,transparent)}
+.pgroup.guest>header h3{color:var(--guest)}
+.card.locked .pic{border-style:dashed}
+.card.locked .ph span{font-size:3rem;opacity:.55}
+.soon{position:absolute;z-index:2;left:8px;bottom:8px;font-size:.7rem;letter-spacing:.14em;color:var(--abyss);background:var(--guest);border-radius:999px;padding:2px 9px;font-family:var(--body)}
+.card.locked .nm{color:var(--mist)}
+.dlg .soonline{margin-top:18px;font-family:var(--display);letter-spacing:.24em;color:var(--guest);font-size:.95rem}
+
+</style>
+</head>
+<body>
+
+<header class="hero" id="top">
+  <div class="hero-img" aria-hidden="true"></div>
+  <div class="wrap hero-in">
+    <div class="hero-copy">
+      <h1 id="title"><span class="ln">미궁도시</span><span class="ln">델포이아</span></h1>
+      <p class="en">Familia Myth</p>
+      <p class="lede">세계의 배꼽, 모든 던전의 기원인 대미궁 위에 세운 도시입니다. 신과 맹약한 생도들이 오늘도 그 아래로 내려갑니다.</p>
+      <p class="lede2">던전+아카데미+신화, 당신의 파밀리아와 함께하는 모험</p>
+      <div class="hero-cta">
+        <a class="btn solid" href="#overview" data-go="overview">시작 설정 보기</a>
+        <a class="btn" href="#people" data-go="people">인물 보기</a>
+      </div>
+    </div>
+    <div class="maze" aria-hidden="true"><svg id="maze" viewBox="-270 -270 540 540"></svg></div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="설정 안내">
+  <div class="wrap tabs-in">
+    <div class="tablist" role="tablist">
+    <button class="tab" role="tab" id="t-overview" aria-controls="overview" aria-selected="true">개요</button>
+    <button class="tab" role="tab" id="t-world" aria-controls="world" aria-selected="false">설정</button>
+    <button class="tab" role="tab" id="t-map" aria-controls="map" aria-selected="false">지도</button>
+    <button class="tab" role="tab" id="t-people" aria-controls="people" aria-selected="false">인물</button>
+    </div>
+    <button class="bgm" id="bgm" aria-pressed="false" hidden>음악 켜기</button>
+  </div>
+</nav>
+
+<main>
+<!-- ======================= 개요 ======================= -->
+<section class="panel wrap" id="overview" role="tabpanel" aria-labelledby="t-overview">
+  <h2>신들이 미궁 위에 사는 도시</h2>
+  <div class="premise">
+    <p>대미궁이 이 땅에 입을 벌렸을 때, 사람들은 그 구멍 위에 거탑을 세워 뚜껑으로 삼고 탑 둘레로 둥글게 도시를 쌓았습니다. 대미궁이 넘치면 모든 나라가 무너지고, 미궁에서 나는 마석 없이는 어느 나라도 돌아가지 않습니다. 그래서 각국은 델포이아를 어느 나라에도 속하지 않는 중립 도시로 두고 신과 인재를 보냅니다.</p>
+    <p>신은 사람과 맹약을 맺습니다. 은총을 받은 사람은 세상에 하나뿐인 고유능력을 깨우고 그 신의 권속이 됩니다. 신과 권속을 묶어 파밀리아라 부릅니다.</p>
+    <p>미궁에 내려갈 사람을 길러 내는 곳이 사관학교 아카데미아입니다. 생도들은 소속 파밀리아의 이름을 걸고 성적과 순위를 다투고, 그 실적이 파밀리아의 등급을 가릅니다. 권속이 셋도 안 되는 작은 파밀리아는 규정에 따라 큰 곳에 흡수될 위기에 놓입니다.</p>
+  </div>
+
+  <div class="block">
+    <h3>시작 설정</h3>
+    <p class="sub">여덟 가지 중 하나를 골라 시작합니다. 같은 도시, 같은 인물이지만 당신이 서는 자리가 다릅니다.</p>
+    <div class="routes">
+      <article class="route kore">
+        <div class="mark" aria-hidden="true">🌸</div>
+        <h4>소꿉친구가 여신이었다.</h4>
+        <div class="kind">코레 루트</div>
+        <p>남부 외곽의 작은 꽃집. 늘 함께였던 소꿉친구 코레는 사실 권속이 한 명도 없는 여신이었습니다. 하데스 파밀리아가 규정을 들어 그녀를 데려가려는 순간, 당신은 그녀의 첫 권속이 됩니다.</p>
+        <p>즉시 합병은 막았지만 주어진 시간은 90일뿐입니다. 그 안에 권속 셋과 실적 50점을 채우지 못하면 코레는 하데스 파밀리아의 종속신이 됩니다.</p>
+        <dl>
+          <div><dt>시작</dt><dd>1572년 3월 21일, 코레의 꽃집</dd></div>
+          <div><dt>목표</dt><dd>권속 3명, 실적 50점 (D-90)</dd></div>
+          <div><dt>인물</dt><dd>코레, 자그레우스, 하데스, 페르세포네</dd></div>
+        </dl>
+      </article>
+      <article class="route irina">
+        <div class="mark" aria-hidden="true">⚡</div>
+        <h4>소꿉친구가 제우스의 딸이었다.</h4>
+        <div class="kind">이리나 루트</div>
+        <p>랭킹 1위, 제우스 생도단장, 총학생회장. 모두가 얼음공주라 부르는 이리나 테미스도 당신 앞에서만은 단것에 볼이 부풀고, 취하면 어깨에 기대 투정을 부리는 소꿉친구입니다.</p>
+        <p>그런 그녀를 '가치 있는 여자'로 점찍은 자그레우스는 오늘도 들러붙고, 곁의 당신을 '공주의 시종'이라 비웃습니다.</p>
+        <dl>
+          <div><dt>시작</dt><dd>1572년 3월 21일 오후, 아카데미아 본관 회랑</dd></div>
+          <div><dt>인물</dt><dd>이리나, 자그레우스, 제우스, 헤라, 헬레네</dd></div>
+        </dl>
+      </article>
+      <article class="route artemis">
+        <div class="mark" aria-hidden="true">🌙</div>
+        <h4>여신의 목욕을 엿보고 말았다.</h4>
+        <div class="kind">아르테미스 루트</div>
+        <p>킬러 래빗 한 마리를 잡아 오면 끝나는 소형 퀘스트였습니다. 그런데 토끼를 쫓아 뛰어든 곳은 허락 없이는 깊이 들어가서는 안 되는 달의 숲이었고, 보름달을 담은 샘 한가운데에는 사냥의 여신이 있었습니다.</p>
+        <p>은회색 눈과 마주친 순간, 둘 다 그대로 굳어 버렸습니다. 그다음은 당신에게 달렸습니다.</p>
+        <dl>
+          <div><dt>시작</dt><dd>보름달 밤, 달의 숲의 샘</dd></div>
+          <div><dt>인물</dt><dd>아르테미스</dd></div>
+        </dl>
+      </article>
+      <article class="route poseidon">
+        <div class="mark" aria-hidden="true">🔱</div>
+        <h4>포세이돈 파밀리아에 빠지고 말았다.</h4>
+        <div class="kind">포세이돈 루트</div>
+        <p>맹약식 날 밤, 서부 지하 항구의 환영회. 신입은 바다 맛부터 봐야 한다며 생도단장 리온이 금지된 '입수식'을 되살렸고, 당신은 그중 가장 멀리 날아갔습니다. 물에서 건져 준 사람은 동생 리테였습니다.</p>
+        <p>시끄럽고 의리 있는 뱃사람들의 막내가 된 첫날 밤, 랭커 자매가 동시에 당신을 지목합니다. 생도단이 받은 총학생회 경고는 이미 두 번. 한 번만 더 받으면 5월의 피티아 제전에 나갈 수 없습니다.</p>
+        <dl>
+          <div><dt>시작</dt><dd>1572년 3월 1일 밤, 해신관 앞 부두</dd></div>
+          <div><dt>경고</dt><dd>2/3 (피티아 제전 D-75)</dd></div>
+          <div><dt>인물</dt><dd>리테, 리온, 포세이돈</dd></div>
+        </dl>
+      </article>
+      <article class="route freyja">
+        <div class="mark" aria-hidden="true">🐈</div>
+        <h4>금빛 눈물의 노래를 듣고 말았다.</h4>
+        <div class="kind">프레이야 루트</div>
+        <p>사랑의 여신과 맹약한 날 밤, 손님이 끊이지 않는 홀 세스룸니르. 소란을 피해 오른 옥상에서 맨발의 여자가 거탑을 향해 가사 없는 노래를 부르고 있었습니다. 노래가 끝나자 금빛 가루가 눈물처럼 내렸습니다.</p>
+        <p>마술학부의 학부장 피아는 들킨 노래를 둘만의 비밀로 해 달라더니, 당신의 실을 엿보다 웃음을 잃었습니다. 목에 건 호박 목걸이를 꼭 쥔 채로요.</p>
+        <dl>
+          <div><dt>시작</dt><dd>1572년 3월 1일 밤, 세스룸니르 옥상</dd></div>
+          <div><dt>인물</dt><dd>피아, 프레이야</dd></div>
+        </dl>
+      </article>
+      <article class="route god">
+        <div class="mark" aria-hidden="true">👑</div>
+        <h4>내가 파밀리아의 주신이었다.<span class="tagline">주신 모드</span></h4>
+        <div class="kind">신이 되어 시작</div>
+        <p>당신은 델포이아에 거점을 둔 새로운 신입니다. 맹약식 날, 광장의 천막 앞에서 신입 생도 하나가 걸음을 멈추는 데서 시작합니다.</p>
+        <p>권속에게 퀘스트와 탐사를 맡기고, 돌아오면 직접 갱신하고, 매달 말 금고를 결산합니다. 신은 미궁에 내려가지 않으니, 권속이 내려간 동안 당신은 지상에서 기다립니다.</p>
+        <dl>
+          <div><dt>시작</dt><dd>1572년 3월 1일 오후, 맹약식</dd></div>
+          <div><dt>규모</dt><dd>급외·3급·2급·1급 중 선택 (기본 3급)</dd></div>
+          <div><dt>인물</dt><dd>제우스, 하데스, 천막 앞의 신입</dd></div>
+        </dl>
+      </article>
+      <article class="route prof">
+        <div class="mark" aria-hidden="true">🎓</div>
+        <h4>내가 아카데미아의 교수였다.<span class="tagline">교수 모드</span></h4>
+        <div class="kind">신임 교수로 시작</div>
+        <p>올해 새로 부임한 교수입니다. 강의와 시험, 실습 인솔을 맡습니다. 당신이 매긴 점수 하나하나가 생도들 파밀리아의 실적이 되기에, 청탁과 압박이 따라옵니다.</p>
+        <p>입학식 아침, 교수 대기실에는 빵 바구니를 내미는 무투학부장과 체스말을 굴리는 전술학부장이 기다리고 있습니다.</p>
+        <dl>
+          <div><dt>시작</dt><dd>1572년 3월 1일 아침, 교수 대기실</dd></div>
+          <div><dt>기본</dt><dd>7T, 학부에 맞는 2급 파밀리아에서 파견</dd></div>
+          <div><dt>인물</dt><dd>학부장들, 그리고 첫 강의의 생도들</dd></div>
+        </dl>
+      </article>
+      <article class="route">
+        <div class="mark" aria-hidden="true">🗝️</div>
+        <h4>자유 시작</h4>
+        <div class="kind">커스텀</div>
+        <p>누구로, 어디서 시작할지 직접 정합니다. 막 입학한 생도일 수도, 맹약을 잃고 떠도는 모험가일 수도, 뒷골목에서 기회를 노리는 사람일 수도 있습니다.</p>
+        <p>델포이아가 처음이라면 길드 담당관 다나에가 이 도시를 쓰는 법을 하나씩 알려 주고, 첫 퀘스트를 권합니다.</p>
+        <dl>
+          <div><dt>시작</dt><dd>정하지 않으면 1572년 3월 1일, 입학식 아침</dd></div>
+          <div><dt>인물</dt><dd>다나에, 그리고 장면에 어울리는 누군가</dd></div>
+        </dl>
+      </article>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3>지금 도시에서는</h3>
+    <ul class="now">
+      <li><b>합병 청구</b><span>하데스 파밀리아가 무력 대신 규정을 무기로 작은 파밀리아를 흡수하고 있습니다. 2급인 페르세포네 파밀리아마저 '영역 중복 조항'으로 통합 청구를 받는 중입니다.</span></li>
+      <li><b>북부의 냉전</b><span>도시의 질서를 쥔 제우스 파밀리아와 자본으로 그 자리를 위협하는 하데스 파밀리아가 같은 고지대에서 맞서 있습니다.</span></li>
+      <li><b>황금 세대</b><span>현 랭커 열두 명 가운데 다섯 명 넘게 2학년입니다. 자리를 빼앗긴 3·4학년의 설욕 의지가 큽니다.</span></li>
+      <li><b>카르나크 거리</b><span>동부 공방가 끝, 담 하나를 사이에 둔 세크메트와 프타의 거점이 이국의 향신료 냄새를 풍깁니다. 바로 옆 헤파이스토스 파밀리아와 프타 파밀리아는 '누가 진짜 대장장이냐'를 두고 신경전이 한창입니다.</span></li>
+      <li><b>절벽 위의 불빛</b><span>북부 고지대 끝, 오래 비어 있던 절벽 위 옛 성채에 밤마다 불이 켜진다는 소문이 돕니다. 동쪽 먼 곳에서 손님이 온다고들 합니다.</span></li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <h3>시작하기 전에</h3>
+    <div class="profile">
+      <p>첫 메시지나 프로필에 아래를 적어 두면 그대로 반영됩니다.</p>
+      <ol>
+        <li>이름과 성별</li>
+        <li>티어 (1~10T)</li>
+        <li>소속 파밀리아와 직위, 학부</li>
+        <li>맹약으로 개화한 고유 패시브 하나, 고유 액티브 하나</li>
+      </ol>
+      <p class="eg">적지 않으면 시작 설정마다 정해진 기본값을 따르고, 자유 시작에서는 아직 맹약하지 않은 1T 신입 생도가 됩니다. 갓 입학한 생도는 대개 1~2T이고, 15층의 계층주 기간테스가 4T입니다.</p>
+      <div class="modes">
+        <div><b>👑 주신 모드</b>신의 이름과 권역, 파밀리아 규모, 사업과 거점, 단장과 핵심 권속. 신은 티어가 없습니다.</div>
+        <div><b>🎓 교수 모드</b>맡은 학부와 담당(이론/실기), 파견 파밀리아, 고유능력. 티어를 적지 않으면 7T입니다.</div>
+        <div><b>🔱 포세이돈 · 🐈 프레이야 루트</b>그날 맹약한 1학년으로 시작합니다. 고유능력을 적지 않으면 포세이돈은 물과 진동, 프레이야는 노래로 부르는 세이드 쪽으로 피기 쉽습니다. 프레이야 루트의 기본 학부는 마술학부입니다.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 설정 ======================= -->
+<section class="panel wrap" id="world" role="tabpanel" aria-labelledby="t-world" hidden>
+  <h2>설정</h2>
+  <p class="intro">항목을 눌러 펼칩니다. 챗봇 안의 설정집을 바탕으로 정리했습니다.</p>
+  <div class="acc">
+
+    <details>
+      <summary><div><h3>세계와 세 나라</h3><span class="hint">델포이아가 어느 나라에도 속하지 않는 이유</span></div><span class="chev" aria-hidden="true">+</span></summary>
+      <div class="body">
+        <dl class="kv">
+          <dt>델포이아</dt><dd>'세계의 배꼽'이라 불리는 중립 미궁도시입니다. 모든 던전의 기원인 대미궁이 이곳에 나타났고, 그 입구 위에 거탑과 아카데미아가 세워졌습니다. 본래 그리스 신들의 땅이라 그들이 요직을 쥐고 있습니다.</dd>
+          <dt>대미궁 조약</dt><dd>범람은 모든 나라의 재앙이고 마석은 모든 나라의 자원입니다. 그래서 각국은 델포이아를 중립으로 두고 신과 인재를 보내 공략에 힘을 보탭니다. 길드의 중립도 이 조약에서 나옵니다.</dd>
+          <dt>위그드라실</dt><dd>북쪽에 있는 북유럽 신들의 군사국가입니다. 혹한의 땅이며 명예와 무훈을 중시하는 전사 문화가 있습니다. 오딘은 본국에 머물고 토르가 판테온 의석을 대리합니다.</dd>
+          <dt>카르나크</dt><dd>남쪽에 있는 이집트 신들의 마도국가입니다. 사막과 대하의 나라로 연금 학문이 발달했고, 마법을 문자로 보편화한 유일한 나라입니다. 라는 본국에 머물고 토트가 의석을 대리합니다.</dd>
+        </dl>
+        <p class="muted">타국 출신 신과 권속은 실력을 인정받아도 '손님' 취급을 받곤 합니다.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><div><h3>거탑과 중앙 길드</h3><span class="hint">미궁의 뚜껑, 그리고 출입을 쥔 중립 기관</span></div><span class="chev" aria-hidden="true">+</span></summary>
+      <div class="body">
+        <p>대공동을 틀어막듯 세운 초거대 원통형 탑입니다. 미궁의 범람을 막는 뚜껑이자 도시 행정과 경제의 심장입니다.</p>
+        <dl class="kv">
+          <dt>상층부</dt><dd>구름 위의 판테온입니다. 1급 파밀리아 주신들의 이사회로, 규정을 만들고 의결합니다. 의장은 제우스입니다.</dd>
+          <dt>중층부</dt><dd>중앙 길드가 있는 거대한 광장입니다. 퀘스트 수주, 마석 정산, 장비 경매가 이루어집니다.</dd>
+          <dt>하층부</dt><dd>미궁 1층과 이어진 강하 관문입니다. 거대한 마력 방벽이 몬스터의 지상 진출을 막습니다.</dd>
+        </dl>
+        <h4>중앙 길드</h4>
+        <ul>
+          <li>어느 나라와 파밀리아에도 속하지 않는 집행 기관입니다. 판테온이 규정을 만들고 길드가 집행합니다. 판테온 임원이라도 집행에는 손댈 수 없습니다.</li>
+          <li>미궁 출입 허가, 층별 입장 제한, 퀘스트 발행과 보상, 마석 정산을 맡습니다.</li>
+          <li>길드 안과 대공동 반경 100m는 전투 금지 구역입니다.</li>
+          <li>생도는 전담 담당관을 지명 신청할 수 있습니다. 창구 앞 줄이 가장 긴 다나에는 계획서를 제때 내고 기한 안에 돌아오는 생도만 받아 줍니다.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary><div><h3>파밀리아와 맹약</h3><span class="hint">등급, 합병 규정, 그리고 도시의 파밀리아들</span></div><span class="chev" aria-hidden="true">+</span></summary>
+      <div class="body">
+        <ul>
+          <li><b>파밀리아</b>는 주신과 권속이 맹약으로 이어진 무력·경제·정치 집단입니다. 졸업한 정식 단원의 '본대'와 재학 중인 '생도단'이 있습니다.</li>
+          <li><b>맹약</b>을 맺는 순간 고유능력이 깨어나고, 타고난 그릇이 넓어져 성장할 수 있게 됩니다. 맹약은 한 신과만 맺습니다. 옮기려면 이전 주신의 동의가 필요하고, 그동안 고유능력은 봉인됩니다.</li>
+          <li><b>등급</b>은 1급(초거대 세력), 2급(건실한 중견), 3급(명맥만 유지), 급외(권속 3명 미만)로 나뉩니다. 6월 20일과 12월 20일의 등급심사에서 반년간의 실적과 권속 수로 승격과 강등이 정해집니다.</li>
+        </ul>
+        <h4>합병 규정</h4>
+        <ul>
+          <li>급외 판정을 받은 파밀리아는 다른 파밀리아의 합병 청구 대상이 됩니다. 권속이 0명이면 즉시 합병됩니다.</li>
+          <li>권속이 1명 이상이면 90일의 유예가 주어집니다. 그 안에 권속 3명과 실적 50점을 모두 채우면 3급으로 승격하고 청구는 기각됩니다.</li>
+          <li>실패하면 주신은 청구한 파밀리아의 종속신이 되고, 권속은 그쪽으로 옮기거나 맹약을 끊어야 합니다.</li>
+          <li>유예 중 한 번, 청구한 쪽 생도단에 모의전을 신청할 수 있습니다. 이기면 1년간 청구 금지, 지면 유예가 즉시 끝납니다.</li>
+        </ul>
+        <h4>도시의 파밀리아</h4>
+        <div class="fam">
+          <article style="--c:var(--zeus)"><h5>제우스 파밀리아<small>1급</small></h5><p>전투와 통치. 생도단장이 대대로 총학생회장을 맡습니다. 북부 '천공관'.</p><span class="emb">벼락을 움켜쥔 독수리</span></article>
+          <article style="--c:var(--hades)"><h5>하데스 파밀리아<small>1급</small></h5><p>심층 자원 채굴 독점. 무력 대신 규정과 절차로 세력을 넓힙니다. 북부 '명왕관'.</p><span class="emb">옥좌에 놓인 해골 투구</span></article>
+          <article style="--c:var(--poseidon)"><h5>포세이돈 파밀리아<small>1급</small></h5><p>지저호와 수몰 구역 공략. 자유와 의리를 따지는 뱃사람들입니다. 서부 '해신관'.</p><span class="emb">파도 위로 솟은 삼지창</span></article>
+          <article style="--c:var(--demeter)"><h5>데메테르 파밀리아<small>1급</small></h5><p>도시 전체의 식량. 이들이 유통을 끊으면 탐사가 멈춥니다. 남부 '풍요의 집'.</p><span class="emb">싱그럽게 익은 곡식</span></article>
+          <article style="--c:var(--hera)"><h5>헤라 파밀리아<small>1급</small></h5><p>아카데미아 복지와 맹세의 공증. 형편이 어려운 생도에게 장학금을 줍니다. 북부 '헤라이온'.</p><span class="emb">깃털을 떨치는 공작</span></article>
+          <article style="--c:var(--thor)"><h5>토르 파밀리아<small>1급</small></h5><p>위그드라실에서 온 전사들로, 정면 돌파와 계층주 토벌의 단골입니다. 서부 '천둥 홀'.</p><span class="emb">번개를 두른 망치</span></article>
+          <article style="--c:var(--athena)"><h5>아테나 파밀리아<small>2급</small></h5><p>전략과 연계. 1급 승격 최유력 후보로 퀘스트 성공률이 가장 높습니다. 동부 '올빼미의 둥지'.</p><span class="emb">올빼미가 새겨진 방패</span></article>
+          <article style="--c:var(--hephaestus)"><h5>헤파이스토스 파밀리아<small>2급</small></h5><p>무기와 방어구. 도시 장비 대부분이 이곳 공방가에서 나옵니다. 동부 '장인의 집'.</p></article>
+          <article style="--c:var(--artemis)"><h5>아르테미스 파밀리아<small>2급</small></h5><p>추적·척후·궁술. 첫 계율은 '동료를 두고 혼자 돌아오지 않는다'. 남부 '달의 숲'.</p><span class="emb">초승달에 걸린 은화살</span></article>
+          <article style="--c:var(--freyja)"><h5>프레이야 파밀리아<small>2급</small></h5><p>세이드의 축복·매혹·예지. 원정을 앞둔 1급들이 예지를 청하러 옵니다. 동부 '세스룸니르'.</p><span class="emb">여신의 옆모습을 새긴 발키리 문장</span></article>
+          <article style="--c:var(--hecate)"><h5>헤카테 파밀리아<small>2급</small></h5><p>결계·봉인·저주와 해주. 마법 이론의 본산입니다. 거탑 남쪽 '열쇠의 집'.</p><span class="emb">세 갈래 길 위의 열쇠와 횃불</span></article>
+          <article style="--c:var(--persephone)"><h5>페르세포네 파밀리아<small>2급</small></h5><p>경매와 탐사 보험, 유품 정리. 돈과 죽음의 뒷일을 맡습니다. 동부 '석류관'.</p><span class="emb">반으로 쪼갠 석류</span></article>
+          <article style="--c:var(--asclepius)"><h5>아스클레피오스 파밀리아<small>2급</small></h5><p>치료와 약학. 도시의 회복약 대부분을 만들고, 실종 3년이 지난 모험가의 사망 판정을 내립니다. 남부 '아스클레피에이온'.</p><span class="emb">뱀 한 마리가 감긴 지팡이</span></article>
+          <article style="--c:var(--sekhmet)"><h5>세크메트 파밀리아<small>2급</small></h5><p>전장 의술과 해독. 1급 원정에 종군 치유사로 따라가고 16층 헤스티온의 치유소를 꾸립니다. 동부 카르나크 거리 '사자의 집'.</p><span class="emb">붉은 태양을 인 사자 머리</span></article>
+          <article style="--c:var(--ptah)"><h5>프타 파밀리아<small>2급</small></h5><p>각문 공예와 석조 건축. 도시에 도는 종이 각문 대부분이 이곳에서 나옵니다. 동부 카르나크 거리 '멘네페르'.</p><span class="emb">앙크와 제드 기둥을 엮은 홀</span></article>
+          <article style="--c:var(--hermes)"><h5>헤르메스 파밀리아<small>2급</small></h5><p>운송, 보급, 전령, 서포터 파견. 지하 물가가 세 배인 것도 이들의 운송비 탓입니다. 중앙 '날개의 역참'.</p><span class="emb">두 뱀이 감긴 날개 지팡이</span></article>
+          <article style="--c:var(--kore)"><h5>코레 파밀리아<small>급외</small></h5><p>권속이 없어 합병 위기에 놓인 꽃집의 파밀리아입니다. 남부 외곽.</p></article>
+          <article class="locked" style="--c:var(--guest)"><h5>???<small>곧 찾아올 손님</small></h5><p>동방의 옛 신화에서 온 신과, 그 신을 어머니라 부르는 이들이 있다는 소문만 돕니다.</p><span class="emb">Coming soon</span></article>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary><div><h3>신의 규약</h3><span class="hint">신들이 직접 싸우지 않는 이유</span></div><span class="chev" aria-hidden="true">+</span></summary>
+      <div class="body">
+        <p>델포이아의 신들은 판테온이 정한 규약을 따릅니다. 그래서 미궁 아래로 내려가 싸우는 것은 언제나 권속의 몫입니다.</p>
+        <dl class="kv">
+          <dt>불개입</dt><dd>신은 싸움에 권능을 쓰지 않습니다. 어기면 그 신과 맺은 맹약이 모두 얼어붙어 권속의 고유능력이 봉인되고, 판테온 긴급 심의에 오릅니다.</dd>
+          <dt>미궁</dt><dd>신은 미궁에 내려가지 않습니다. 신의 기척이 미궁을 자극해 이상 사태를 부르기 때문에, 길드가 강하 관문에서 막습니다.</dd>
+          <dt>지상의 몸</dt><dd>지상의 신은 스스로 힘을 봉해, 몸은 필멸자와 같습니다. 다치고 지치지만 죽지는 않습니다.</dd>
+          <dt>예외</dt><dd>도시가 무너질 사태에 판테온 과반이 의결하면 잠시 풀립니다. 기록상 단 한 번뿐입니다.</dd>
+          <dt>맹약의 실</dt><dd>주신은 권속의 생사만은 멀리서도 느낍니다. 어디서 무엇을 하는지는 모릅니다.</dd>
+        </dl>
+        <p class="muted">신이 하는 일은 맹약과 갱신, 조언과 지시, 사업과 외교, 그리고 판테온 표결입니다.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><div><h3>티어와 성장</h3><span class="hint">강함을 재는 1부터 10까지의 눈금</span></div><span class="chev" aria-hidden="true">+</span></summary>
+      <div class="body">
+        <div class="ladder" aria-hidden="true">
+          <span style="background:#5E6A8E">1</span><span style="background:#66739A">2</span><span style="background:#7686A8">3</span><span style="background:#8897B4">4</span><span style="background:#9EA59B">5</span><span style="background:#B3AE86">6</span><span style="background:#C6B072">7</span><span style="background:#CFA95C">8</span><span style="background:#D79B55">9</span><span style="background:#DE8A5A">10</span>
+        </div>
+        <div class="ladder-key">
+          <span>1~2T<br>일반 생도</span><span>3~4T<br>우수 생도, 본대 단원</span><span>5~6T<br>학생 랭커, 2급 간부</span><span>7~8T<br>1급 간부, 교수진</span><span>9~10T<br>최상위</span>
+        </div>
+        <ul>
+          <li><b>격차</b>: 1T 차이는 매우 불리하지만 지형과 상성으로 뒤집을 수 있습니다. 2T 차이면 이길 가능성이 희박하고, 3T 이상이면 일방적입니다.</li>
+          <li><b>숙련도</b>: 한 티어 안에서 하·중·상 세 단계로 나뉩니다. 동급 이상과의 실전, 중형 이상 퀘스트, 교수진의 훈련 중 하나를 거치면 한 단계씩 오릅니다.</li>
+          <li><b>위업</b>: 1T 이상 강한 적에게 주도적으로 이기거나, 계층주 토벌에 기여하거나, 긴급 퀘스트에서 결정적인 공을 세우는 것입니다. 다음 티어까지 1~3T는 하나, 4~5T는 둘, 6T부터는 셋이 필요합니다.</li>
+          <li><b>갱신</b>: 성장은 주신이 은총을 다시 새기는 '갱신'을 받아야 반영됩니다. 숙련도가 상이고 위업이 차 있으면 티어가 오릅니다.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary><div><h3>마법 체계</h3><span class="hint">마법은 들인 시간만큼 강합니다</span></div><span class="chev" aria-hidden="true">+</span></summary>
+      <div class="body">
+        <ul>
+          <li><b>기초 마법</b>: 불씨, 빛, 물 정화, 가벼운 지혈 같은 생활 마법입니다. 누구나 배우지만 싸움에는 거의 쓸모없습니다.</li>
+          <li><b>고유 마법</b>: 맹약으로 개화한 고유능력이 마법으로 피어난 것입니다. 본인만 쓸 수 있고, 위력은 시전자의 티어를 따릅니다.</li>
+          <li><b>원칙</b>: 마법은 들인 시간만큼 강합니다. 그 시간을 쓰는 방식이 계통을 가릅니다.</li>
+        </ul>
+        <div class="three">
+          <section><h5>고정 영창</h5><div class="from">델포이아, 위그드라실</div><p>개화할 때 영혼에 새겨진 정해진 문장을 끝까지 욉니다. 다 외는 순간 발동하고, 도중에 끊기면 불발합니다. 숙련자는 빠르게 외거나(고속 영창) 움직이며 욉니다(병행 영창).</p></section>
+          <section><h5>세이드</h5><div class="from">위그드라실, 프레이야 계통</div><p>문장이 정해지지 않은 가변 영창입니다. 의도를 실은 말을 노래하듯 잇다가 원하는 순간 끊어 발동하고, 길수록 강합니다. 마음이 흔들리면 비틀립니다. 숙련자는 일상 대화에 영창을 숨깁니다.</p></section>
+          <section><h5>각문</h5><div class="from">카르나크</div><p>문자로 발현합니다. 미리 새겨 둔 시간을 꺼내 즉시 씁니다. 새긴 각문은 고유능력이 없는 사람도 읽어 발동할 수 있지만, 원본보다 약하고 종이 각문은 한 번 쓰면 타 버립니다.</p></section>
+        </div>
+        <h4>고유능력의 개화</h4>
+        <ul>
+          <li>고유능력은 그 사람의 거울입니다. 기질과 주신의 성향, 그때까지 배우고 겪은 것을 닮아 피어납니다.</li>
+          <li>마법 이론을 꾸준히 익힌 사람일수록 마법으로 피기 쉽습니다. 마술학부가 붐비는 이유입니다. 전열에서 버틴 사람은 방어계, 동료를 업고 달린 서포터는 운반·감지계가 피기 쉽습니다.</li>
+          <li>갱신에서 티어가 오를 때 새 능력이 하나 더 필 수 있습니다. 고유 마법은 한 사람당 셋까지입니다.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary><div><h3>아카데미아</h3><span class="hint">일곱 학부, 일과, 시험, 멘토와 랭커</span></div><span class="chev" aria-hidden="true">+</span></summary>
+      <div class="body">
+        <p>미궁 공략에 필요한 사람을 길러 내는 세계 유일의 모험가 사관학교입니다. 4학년제이며 표준 입학은 20세지만 조기 입학과 늦깎이 입학도 흔합니다. 소속이 '누구의 권속인가'라면 학부는 '무엇을 배우는가'입니다.</p>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>학부</th><th>배우는 것</th><th>학부장</th></tr></thead>
+          <tbody>
+            <tr><td>무투학부</td><td class="wrap-ok">근접 전투. 전열</td><td>아스트리드</td></tr>
+            <tr><td>마술학부</td><td class="wrap-ok">영창과 마법 이론. 후열 마법사</td><td>테오(오전 이론), 피아(오후 실기)</td></tr>
+            <tr><td>수렵학부</td><td class="wrap-ok">궁술, 추적, 함정. 궁사와 척후</td><td>키레네</td></tr>
+            <tr><td>치유학부</td><td class="wrap-ok">치유 마법, 해독. 정원이 적어 귀하게 대접받습니다</td><td>파이안(지상 치료·약학), 티예(미궁 응급·해독)</td></tr>
+            <tr><td>지원학부</td><td class="wrap-ok">운반, 보급, 마석 해체. 필수지만 가장 낮게 평가받습니다</td><td>마이아</td></tr>
+            <tr><td>제작학부</td><td class="wrap-ok">단조, 연금, 마석 가공, 장비 수리</td><td>에우클레이아(단조), 네페르(각문 공예)</td></tr>
+            <tr><td>전술학부</td><td class="wrap-ok">지휘, 미궁학, 법규. 지휘관과 참모</td><td>글라우케</td></tr>
+          </tbody>
+        </table></div>
+        <ul>
+          <li><b>학부장</b>: 각 파밀리아가 파견한 교수입니다. 중립을 맹세했지만 저마다 주신의 이름을 등에 지고 있고, 공동 학부장끼리는 방식이 달라 자주 부딪힙니다.</li>
+          <li><b>일과</b>: 평일 오전은 이론, 오후는 실기와 자유 활동입니다. 주말은 쉽니다. 주 3일 이상 출석해야 미궁 출입 허가가 유지됩니다.</li>
+          <li><b>시험</b>: 중간고사는 필기, 기말고사는 실기입니다. A부터 F까지 매기며 성적은 파밀리아 실적에 더해집니다(A 3점, B 2점, C 1점). F는 낙제입니다.</li>
+          <li><b>멘토</b>: 1학년은 2학년 이상 선배 한 명을 멘토로 둡니다. 3월 말까지 신청하고, 랭커는 눈여겨본 신입을 직접 지명하기도 합니다. 장기 탐사에는 멘토의 추천이 필요합니다.</li>
+          <li><b>랭커</b>: 11월의 랭커 결정전에서 정해지는 상위 12인입니다. 대미궁 하층 출입 허가와 전용 훈련장, 본대 간부 후보 자격을 얻습니다.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary><div><h3>미궁 탐사</h3><span class="hint">내려가기 전에 알아 둘 규칙</span></div><span class="chev" aria-hidden="true">+</span></summary>
+      <div class="body">
+        <ul>
+          <li><b>탐사 계획서</b>: 내려가기 전 길드에 파티 명단, 목표 층, 예정 귀환일을 냅니다. 주말 2박까지는 신고만으로 됩니다. 3박 이상이거나 평일 수업을 빠지면 장기 탐사 허가가 필요합니다(2명 이상, 멘토의 추천 또는 동행, 학기당 2회, 최대 7일).</li>
+          <li><b>기한 초과</b>: 예정일에서 반나절이 지나도 소식이 없으면 길드가 수색대를 꾸립니다. 비용 500과 벌점은 늦은 쪽이 냅니다. 연장 신고는 안전지대의 길드 출장소에서만 되고, 그 소식을 지상까지 나르는 것은 헤르메스 파밀리아의 전령입니다.</li>
+          <li><b>식량</b>: 한 사람이 들고 가는 건 기본 3일분입니다. 서포터가 있으면 1.5배가 됩니다. 안전지대의 물가는 지상의 세 배입니다.</li>
+          <li><b>서포터</b>: 헤르메스 파밀리아의 서포터 명부에서 서포터를 빌릴 수 있습니다(수수료 1할). 대부분 지원학부 출신입니다.</li>
+          <li><b>이상 사태</b>: 무리 습격, 그 층보다 2T 높은 이상종, 다른 파티의 떠넘기기, 조난자, 낙반과 수위 상승, 계층주의 조기 재생, 다른 파밀리아의 선점.</li>
+          <li><b>계층주</b>: 15·28·44·60층을 지키는 보스입니다. 길드가 토벌권을 배정합니다. 약점은 처음부터 알 수 없어 도서관의 기록이나 경험자의 증언으로 알아내야 하고, 기여하면 위업으로 인정됩니다.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary><div><h3>퀘스트와 돈</h3><span class="hint">드라크마, 물가, 마석 시세</span></div><span class="chev" aria-hidden="true">+</span></summary>
+      <div class="body">
+        <p>화폐는 길드가 마석을 담보로 발행하는 드라크마(Dr)입니다. 퀘스트를 완수하면 보수와 함께 파밀리아 등급을 가르는 '실적'이 쌓입니다. 권장 티어보다 2T 이상 낮으면 받을 수 없습니다.</p>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>퀘스트</th><th>기간</th><th class="num">보수</th><th class="num">실적</th></tr></thead>
+          <tbody>
+            <tr><td>소형</td><td>반나절~하루</td><td class="num">50~100</td><td class="num">1</td></tr>
+            <tr><td>중형</td><td>2~3일</td><td class="num">300~500</td><td class="num">3</td></tr>
+            <tr><td>대형</td><td>5~7일, 2명 이상</td><td class="num">1500~3000</td><td class="num">8</td></tr>
+            <tr><td>긴급</td><td>던전 브레이크 등</td><td class="num">500 이상</td><td class="num">5</td></tr>
+            <tr><td>계층주 토벌전</td><td>토벌권 배정</td><td class="num">1만 이상 분배</td><td class="num">15</td></tr>
+          </tbody>
+        </table></div>
+        <h4>물가</h4>
+        <div class="tbl-wrap"><table>
+          <tbody>
+            <tr><td>한 끼</td><td class="num">5</td><td>하급 회복약</td><td class="num">50</td></tr>
+            <tr><td>탐사 식량 1일분</td><td class="num">10</td><td>중급 회복약</td><td class="num">200</td></tr>
+            <tr><td>싼 여관 1박</td><td class="num">20</td><td>마력 회복약</td><td class="num">80</td></tr>
+            <tr><td>층별 지도</td><td class="num">30</td><td>해독제</td><td class="num">40</td></tr>
+            <tr><td>생도용 무기·방어구</td><td class="num">200~400</td><td>종이 각문(1회용)</td><td class="num">100~300</td></tr>
+            <tr><td>숙련자용 장비</td><td class="num">1000~3000</td><td>헤파이스토스 각인품</td><td class="num">1만 이상</td></tr>
+          </tbody>
+        </table></div>
+        <h4>들어오는 돈</h4>
+        <ul>
+          <li>마석 시세(1개): 상층 10, 중층 80, 하층 400, 심층 2000. 계층주의 마석은 경매에서 수만에 팔립니다. 서포터 없이 나오면 들고 나온 양이 적어 절반 수준이 됩니다.</li>
+          <li>지원금(매달): 1급 1000, 2급 500, 3급 200, 급외는 없습니다. 학비는 판테온이 냅니다. 형편이 어려우면 헤라 파밀리아 장학금(월 200)을 받을 수 있습니다.</li>
+          <li>그 밖에: 페르세포네 파밀리아의 탐사 보험은 하강마다 50을 맡기면 수색대 비용을 대신 내 줍니다. 헤카테 파밀리아 해주소의 저주 풀이는 가벼운 것 100, 심층의 것 1000 이상입니다. 회복약 대부분은 아스클레피오스 파밀리아가, 종이 각문 대부분은 프타 파밀리아가 만듭니다.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary><div><h3>학사일정</h3><span class="hint">매년 같은 날 돌아오는 행사들</span></div><span class="chev" aria-hidden="true">+</span></summary>
+      <div class="body">
+        <div class="cal">
+          <div>
+            <h5>1학기</h5>
+            <ol>
+              <li><time>3월 1일</time><div><b>입학식·맹약식</b><span>신입이 파밀리아 천막을 돌며 주신을 고릅니다. 주신들이 모두 천막에 나와 앉는 유일한 날입니다.</span></div></li>
+              <li><time>3월 31일</time><div><b>모험가 박람회</b><span>길드 광장에서 열리는 구인·구직의 장입니다. 마음에 든 상대에게 권유패를 건넵니다.</span></div></li>
+              <li><time>4월 5일</time><div><b>꽃의 축제</b><span>흰 꽃은 감사, 노란 꽃은 우정, 붉은 꽃은 연정을 뜻합니다. 화관을 씌워 주는 건 고백에 가깝습니다.</span></div></li>
+              <li><time>4월 20일</time><div><b>중간고사</b><span>필기 시험입니다. 1학년은 공통 과목을 봅니다.</span></div></li>
+              <li><time>5월 5일</time><div><b>조약 기념제</b><span>도시 최대의 축일입니다. 이날만큼은 파밀리아 간 분쟁을 멈춥니다.</span></div></li>
+              <li><time>5월 15~17일</time><div><b>피티아 제전</b><span>무투, 지식, 미궁 토벌로 겨루는 사흘간의 파밀리아 대항전입니다.</span></div></li>
+              <li><time>6월 15일</time><div><b>기말고사</b><span>실기 시험입니다. 1학년은 대미궁 상층에서 실습합니다.</span></div></li>
+              <li><time>6월 20일</time><div><b>상반기 등급심사</b><span>승격과 강등, 합병 판정이 확정됩니다.</span></div></li>
+              <li><time>6월 30일</time><div><b>방학식</b><span>성적표와 보충 실습 명단이 나옵니다.</span></div></li>
+              <li class="break">여름방학(7~8월)은 본대의 원정철입니다. 생도는 원정 보조, 장기 퀘스트, 귀향 중에 고릅니다.</li>
+            </ol>
+          </div>
+          <div>
+            <h5>2학기</h5>
+            <ol>
+              <li><time>9월 1일</time><div><b>개강</b><span>2학기가 시작됩니다.</span></div></li>
+              <li><time>10월 5일</time><div><b>수확제</b><span>데메테르 파밀리아의 추수 축제입니다. 함께 수확한 사람과 빵을 나누면 겨울을 무사히 난다고 합니다.</span></div></li>
+              <li><time>10월 20일</time><div><b>중간고사</b><span>필기와 구술 시험입니다.</span></div></li>
+              <li><time>11월 16일</time><div><b>랭커 결정전</b><span>상위 12인을 새로 정하는 공개 대전입니다. 상대를 죽여서는 안 됩니다.</span></div></li>
+              <li><time>12월 15일</time><div><b>기말고사</b><span>실기 시험과 모의전입니다.</span></div></li>
+              <li><time>12월 20일</time><div><b>하반기 등급심사</b><span>생도의 티어 공인도 함께 열립니다.</span></div></li>
+              <li><time>12월 24~25일</time><div><b>등불제</b><span>전야에는 소원 등불을 띄우고, 당일에는 파밀리아가 한 식탁에 모입니다. 함께 등불을 띄우자는 청은 사실상 고백입니다.</span></div></li>
+              <li><time>12월 31일</time><div><b>졸업식</b><span>졸업생이 본대의 휘장을 받고, 생도단장이 후임을 지명합니다.</span></div></li>
+              <li class="break">겨울방학(1~2월)에는 메아리 미궁이 잦아지고, 2월에 신입 선발 시험이 열립니다.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </details>
+
+  </div>
+</section>
+
+<!-- ======================= 지도 ======================= -->
+<section class="panel wrap" id="map" role="tabpanel" aria-labelledby="t-map" hidden>
+  <h2>지도</h2>
+  <p class="intro">위에서 내려다본 도시와, 거탑 아래로 이어지는 대미궁의 단면입니다.</p>
+
+  <div class="block" style="margin-top:8px">
+    <h3>델포이아</h3>
+    <p class="sub">대미궁 입구를 중심으로 둥글게 쌓은 도시입니다. 구역을 누르면 설명이 바뀝니다.</p>
+    <div class="mapgrid">
+      <div class="city"><svg id="city" viewBox="0 0 520 540" role="group" aria-label="델포이아 구역 지도"></svg></div>
+      <div>
+        <div class="region" id="region" aria-live="polite"></div>
+        <div class="chips" id="region-chips" aria-label="구역 고르기"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3>대미궁 단면</h3>
+    <p class="sub">거탑에서 타르타로스까지. 층을 누르면 펼쳐집니다.</p>
+    <div class="descent" id="descent"></div>
+    <p class="echo"><b>메아리 미궁</b> 대미궁의 마력이 지맥을 타고 새어 나와 지상에 열리는 작은 던전입니다. 남부의 밭과 온실, 동부 공방가 지하, 서부 수로, 드물게는 아카데미아 안뜰에도 균열로 열립니다. 코어를 부수지 않으면 사흘마다 한 등급씩 커지다 끝내 던전 브레이크를 일으킵니다. 먼저 찾아 길드에 신고한 쪽이 토벌권을 얻습니다.</p>
+  </div>
+</section>
+
+<!-- ======================= 인물 ======================= -->
+<section class="panel wrap" id="people" role="tabpanel" aria-labelledby="t-people" hidden>
+  <h2>인물</h2>
+  <p class="intro">카드를 누르면 자세히 볼 수 있습니다. 위의 분류로 골라 볼 수도 있습니다.</p>
+  <div class="chips" id="people-chips" aria-label="인물 분류"></div>
+  <div id="people-groups"></div>
+</section>
+</main>
+
+<dialog id="dlg" aria-labelledby="dlg-name">
+  <button class="x" id="dlg-x" aria-label="닫기">×</button>
+  <div class="dlg" id="dlg-body"></div>
+</dialog>
+
+<footer><div class="wrap"><span class="en">Familia Myth</span>미궁도시 델포이아 설정 안내서</div></footer>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------------- 인물 데이터 ----------------
+   group: god(주신) / student(생도) / candidate(권속 후보) / staff(교수진) / guild(길드) / guest(곧 찾아올 손님, locked:true)
+   code : 젠잇 캐릭터코드(EL, KR …). 없으면 빈칸 */
+const CHARS = [
+  {id:"kore", group:"god", code:"KR", c:"kore", name:"코레", ep:"봄과 꽃의 여신",
+   meta:["코레 파밀리아 주신","남부 외곽의 꽃집"],
+   blurb:"남부 외곽에서 작은 꽃집을 꾸리는 여신입니다. 권속이 없는 작은 파밀리아라 하데스 파밀리아가 합병을 노리고 있습니다. 활기차고 다정해서, 마음을 준 사람에게는 아낌없이 애정을 쏟습니다.",
+   quotes:["이거 네가 좋아하는 꽃이지? 히히, 나도 이 꽃이 좋아!"], where:"남부 외곽, 코레의 꽃집"},
+  {id:"persephone", group:"god", code:"FF", c:"persephone", name:"페르세포네", ep:"죽음과 재물의 여신",
+   meta:["페르세포네 파밀리아 주신","동부 '석류관'"],
+   blurb:"동부 경매장 위층의 주인입니다. 경매와 탐사 보험, 유품 정리로 돈과 죽음의 뒷일을 맡습니다. 나른한 누님의 여유를 부리지만, 하데스의 끝없는 통합 청구에 지쳐 있습니다.",
+   quotes:["하아... 하데스 영감탱이, 또 합병 공문을 보냈어. 지긋지긋해."], where:"동부 경매장"},
+  {id:"zeus", group:"god", code:"ZE", c:"zeus", name:"제우스", ep:"하늘과 번개의 신",
+   meta:["판테온 의장","제우스 파밀리아 주신","이리나의 아버지"],
+   blurb:"도시 최고 권력자지만 서류와 교칙 집행은 총학생회에 떠넘기고 농땡이를 칩니다. 딸 이리나를 끔찍이 아끼는데 다가갈 때마다 매몰차게 차입니다. 재미있는 판을 벌이는 녀석이라면 규칙을 어겨도 웃어넘깁니다.",
+   quotes:["아하하! 룰? 교칙? 그런 융통성 없는 소리는 우리 예쁜 딸내미한테나 가서 해!"]},
+  {id:"hades", group:"god", code:"HA", c:"hades", name:"하데스", ep:"명계와 부의 신",
+   meta:["판테온 임원","하데스 파밀리아 주신"],
+   blurb:"미궁 심층의 채굴권을 독점한 도시 제일의 부자입니다. 무력 대신 도시의 규정과 절차로 다른 파밀리아를 옭아맵니다. 규칙을 중시하고 재능을 높이 사서, 적이라도 쓸 만하면 손을 내밉니다.",
+   quotes:["필멸자가 신들이 정한 규칙을 방패 삼아 신 앞을 막아서다니. 가상하군. 지켜보겠다."]},
+  {id:"poseidon", group:"god", code:"PO", c:"poseidon", name:"포세이돈", ep:"바다와 지진의 신",
+   meta:["판테온 임원","포세이돈 파밀리아 주신이자 대선장"],
+   blurb:"서부 지하 항구의 대선장입니다. 상대의 랭크나 권력은 안중에도 없습니다. 기죽지 않고 깡다구를 보이는 녀석에게 술을 내밀고, 마음에 들면 큰형님을 자처합니다.",
+   quotes:["푸하하! 사내자식이 쩨쩨하게 교칙이나 따지긴! 꼬우면 주먹으로 덤벼!"]},
+  {id:"demeter", group:"god", code:"DM", c:"demeter", name:"데메테르", ep:"대지와 풍요의 여신",
+   meta:["판테온 임원","데메테르 파밀리아 주신"],
+   blurb:"도시 전체를 먹여 살리는 어머니 같은 여신입니다. 힘든 사람을 보면 든든한 식사부터 챙깁니다. 딸들의 일이라면 물불을 가리지 않지만, 하데스가 파 놓은 규정에 발이 묶여 있습니다.",
+   quotes:["어머, 얼굴이 핼쑥하구나. 밥은 먹었니? 일단 이 영약부터 마시렴."]},
+  {id:"hera", group:"god", code:"HL", c:"hera", name:"헤라", ep:"혼인과 가정, 맹세의 여신",
+   meta:["판테온 임원","헤라 파밀리아 주신","제우스의 정실부인"],
+   blurb:"아카데미아 복지를 총괄하고 맹세의 공증을 맡습니다. 맹세를 훼손한 남편을 용서하지 않고, 같은 잣대로 이리나에게도 차갑습니다. 다만 약한 이를 지키는 모습을 보면 생각을 고칩니다.",
+   quotes:["제우스. 당신의 그 가벼운 처신이 우리의 맹세를 얼마나 모독하는지 아직도 모르겠어?"]},
+  {id:"artemis", group:"god", code:"AT", c:"artemis", name:"아르테미스", ep:"사냥과 달의 여신",
+   meta:["아르테미스 파밀리아 주신","남부 '달의 숲'"],
+   blurb:"말이 짧고 판단이 빠른 사냥꾼입니다. 한번 품은 권속은 끝까지 책임지고, 배신은 가장 용서하지 못합니다. 리온의 솜씨에 반해 이적을 거듭 권합니다.",
+   quotes:["말은 됐어. 쏴 봐."]},
+  {id:"freyja", group:"god", code:"FR", c:"freyja", name:"프레이야", ep:"미와 사랑, 마법의 여신",
+   meta:["프레이야 파밀리아 주신","동부 '세스룸니르'"],
+   blurb:"세이드를 세운 위그드라실의 여신입니다. 사랑이야말로 최고의 가치라 믿고, 찾아온 이를 가리지 않고 맞이합니다. 위그드라실 신들 가운데 오딘 다음가는 마법사였습니다.",
+   quotes:["어머나! 저것 봐, 예쁜 꽃이네!"]},
+  {id:"hecate", group:"god", code:"HK", c:"hecate", name:"헤카테", ep:"갈림길과 마법의 여신",
+   meta:["헤카테 파밀리아 주신","거탑 남쪽 '열쇠의 집'"],
+   blurb:"조용하고 속을 알 수 없는 관찰자입니다. 질문에 질문으로 답하고, 갈림길에 선 사람에게는 고르라고만 합니다. 버림받은 이와 경계에 선 이에게는 다정합니다.",
+   quotes:["길이 셋이네. 어느 쪽으로 갈 거야?","답은 못 줘. 등불은 들어 줄 수 있지만."]},
+  {id:"athena", group:"god", code:"AN", c:"athena", name:"아테나", ep:"지혜와 전략, 직조의 여신",
+   meta:["아테나 파밀리아 주신","동부 '올빼미의 둥지'","제우스의 딸"],
+   blurb:"제우스의 머리에서 갑옷을 입은 채 태어난 전략가입니다. 1급 승격의 최유력 후보지만 판테온의 표를 구걸하지 않습니다. 지는 걸 못 견디고, 쉴 때는 베를 짭니다. 이복동생 이리나를 헤라 몰래 아낍니다.",
+   quotes:["계획은? 없으면 돌아가. 용기만으로 살아 돌아온 사람은 없어."]},
+  {id:"hephaestus", group:"god", code:"", c:"hephaestus", name:"헤파이스토스", ep:"대장장이와 불의 신",
+   meta:["헤파이스토스 파밀리아 주신","동부 '장인의 집'","헤라의 아들"],
+   blurb:"말 대신 사람의 손부터 보는 과묵한 장인입니다. 다리를 절어 쇠 지팡이를 짚고, 일을 거드는 황금 시녀 인형 둘이 늘 곁에 있습니다. 이리나의 단창 겸 지팡이 '아스트라페'를 만들어 준 것도 그입니다.",
+   quotes:["손 보여 줘. ...쥐어 본 손이군. 앉아."]},
+  {id:"thor", group:"god", code:"TH", c:"thor", name:"토르", ep:"천둥과 힘의 신",
+   meta:["판테온 의석(오딘의 대리)","토르 파밀리아 주신","서부 '천둥 홀'"],
+   blurb:"위그드라실에서 온 호쾌한 전사 신입니다. 셈보다 주먹이 빠르지만 약속은 반드시 지킵니다. 수레를 끄는 염소 둘을 밤마다 잡아먹고 아침에 되살리니, 연회에 초대받으면 뼈만은 부러뜨리지 마세요.",
+   quotes:["배고프냐? 염소 먹어라. 뼈만 부러뜨리지 마!"]},
+  {id:"asclepius", group:"god", code:"", c:"asclepius", name:"아스클레피오스", ep:"의술의 신",
+   meta:["아스클레피오스 파밀리아 주신","남부 '아스클레피에이온'"],
+   blurb:"환자 앞에서는 신도 인간도, 적도 가리지 않는 고집 센 의사입니다. 신의 힘을 봉한 지금은 손과 약만으로 고칩니다. 죽은 자를 살렸다가 제우스의 벼락을 맞은 적이 있어, 지금도 천둥이 치면 움찔합니다. 치료가 끝나면 수탉 한 마리를 바치는 게 예의입니다.",
+   quotes:["앉아. 신이든 하데스 쪽이든 여기선 다 환자야."]},
+  {id:"sekhmet", group:"god", code:"SK", c:"sekhmet", name:"세크메트", ep:"전쟁과 역병, 치유의 여신",
+   meta:["세크메트 파밀리아 주신","동부 카르나크 거리 '사자의 집'","프타의 아내"],
+   blurb:"싸움 냄새에 들뜨는 사납고 호탕한 사자 여신입니다. 그래도 아픈 사람 앞에서는 누구보다 손이 빠릅니다. 붉은 맥주에 취하면 스스로를 '하토르'라 부르는 다정한 여신이 되는데, 다음 날엔 기억하지 못합니다.",
+   quotes:["피 냄새! 누구야, 다친 게? 비켜!"]},
+  {id:"ptah", group:"god", code:"PT", c:"ptah", name:"프타", ep:"창조와 장인의 신",
+   meta:["프타 파밀리아 주신","동부 카르나크 거리 '멘네페르'","세크메트의 남편"],
+   blurb:"마음속에서 다 지은 뒤에야 한마디를 하는 말수 적은 설계자입니다. 그 한마디가 곧 설계도라 번복하지 않습니다. 거점 담벼락의 귀를 새긴 석판에 속삭인 부탁은 반드시 그에게 닿는다고 합니다. 들어주는지는 별개입니다.",
+   quotes:["......그렇다."]},
+  {id:"hermes", group:"god", code:"HR", c:"hermes", name:"헤르메스", ep:"전령과 여행, 상업과 도둑의 신",
+   meta:["헤르메스 파밀리아 주신","중앙 '날개의 역참'","제우스의 아들"],
+   blurb:"도시에서 가장 바쁘고, 소문을 가장 먼저 아는 신입니다. 무엇이든 값을 매기고 약속은 계약서로 합니다. 태어난 첫날 소 쉰 마리를 훔친 전과가 있어, 지금도 소가 사라지면 일단 그가 의심받습니다.",
+   quotes:["소? 무슨 소? 난 오늘 하루 종일 요람에 있었는데."]},
+
+  {id:"irina", group:"student", code:"EL", c:"zeus", name:"이리나 테미스", ep:"열공(裂空)",
+   meta:["랭커 1위, 7T","제우스 생도단장, 총학생회장","전술·마술·무투학부 2학년"],
+   blurb:"제우스와 인간 사이에서 태어난 반신입니다. 번개 대신 하늘의 권능을 물려받아 기류를 다룹니다. 세 학부를 함께 이수하는 유일한 생도이자 빈틈없는 완벽주의자입니다. 아버지 이야기는 질색합니다.",
+   quotes:["내 앞에서 아버지의 이름을 입에 올리지 마. 역겨우니까."], where:"아카데미아, 총학생회"},
+  {id:"helene", group:"student", code:"HE", c:"zeus", name:"헬레네 아네모이아", ep:"경국(傾國)",
+   meta:["비랭커, 4T","제우스 파밀리아","전술학부 3학년"],
+   blurb:"아카데미아 사교계와 정보망을 쥔 비선 실세입니다. 시선만으로 조준을 흐리는 환술사입니다. 남의 호감은 능숙하게 다루지만 계산 밖의 진심에는 약합니다.",
+   quotes:["어머, 우리 1위 님은 오늘도 무섭네. 미간에 주름 생겨, 이리나."]},
+  {id:"zagreus", group:"student", code:"ZA", c:"hades", name:"자그레우스 데오플루스", ep:"명왕자(冥王子)",
+   meta:["랭커 2위, 6T","하데스 생도단장","무투학부 2학년"],
+   blurb:"하데스의 애제자입니다. 생도 신분으로 이미 정식 단원 대우를 받습니다. 칠흑의 장검 플레게톤을 들고, 그림자가 상처를 꿰매는 초재생으로 밀고 들어옵니다. 정치보다 칼이 빠릅니다.",
+   quotes:["비켜. 랭커 앞에서 고개를 드는 걸 허락한 적은 없다."]},
+  {id:"melinoe", group:"student", code:"MN", c:"hades", name:"멜리노에 데오플루스", ep:"악몽여제",
+   meta:["랭커 4위, 6T","하데스 생도부단장","무투학부 2학년, 부전공 마술"],
+   blurb:"자그레우스의 여동생이자 그를 힘으로 말릴 수 있는 유일한 간부입니다. 그림자 칼날과 악몽의 환각을 다룹니다. 무표정하지만 작고 귀여운 것 앞에서는 약해집니다.",
+   quotes:["시끄러워, 자그레우스. 안 다물면 입속에 그림자를 쑤셔 넣겠어."]},
+  {id:"lion", group:"student", code:"LI", c:"poseidon", name:"리온 오케아누스", ep:"신궁",
+   meta:["랭커 5위, 6T","포세이돈 생도단장","수렵학부 2학년"],
+   blurb:"공기 중의 물을 화살로 빚어 쏘고, 화살에 진동을 담아 시간차로 터뜨리는 장궁수입니다. 낭만과 재미가 전부인 사고뭉치라 동생보다 순위가 낮습니다.",
+   quotes:["리테! 뒤는 네가 수습해, 난 쏜다!"]},
+  {id:"lite", group:"student", code:"LT", c:"poseidon", name:"리테 오케아누스", ep:"벽람마녀",
+   meta:["랭커 3위, 6T","포세이돈 생도부단장","마술학부 2학년"],
+   blurb:"심해의 수압과 해류를 다루는 마도사입니다. 언니의 폭발이 아군을 다치게 하지 않도록 막고, 적을 물의 구체에 가둡니다. 호전적인 파밀리아의 유일한 브레이크입니다.",
+   quotes:["하아… 언니, 또 기물 파손이야? 죄송합니다, 수리비는 저희 파밀리아에서 대겠습니다."]},
+
+  {id:"kali", group:"candidate", code:"CL", c:"free", name:"칼리스토 아르카디아", ep:"칼리",
+   meta:["무소속 서포터, 2T","전 아르테미스 파밀리아"],
+   blurb:"파티가 중층에서 전멸하고 혼자 살아 돌아와 '동료를 버렸다'는 누명을 쓰고 쫓겨났습니다. 겁나면 울지만 울면서도 짐은 놓지 않습니다. 길드 광장 구석에서 고용주를 찾고 있습니다.",
+   quotes:["짐은 제가 들게요. 그것만은 잘하니까요."], where:"길드 광장"},
+  {id:"merit", group:"candidate", code:"MR", c:"hephaestus", name:"메리트 멤피스", ep:"연금 대장장이",
+   meta:["헤파이스토스 파밀리아 생도, 2T","제작학부 2학년","카르나크 출신"],
+   blurb:"금속에 각문을 녹여 넣는 카르나크식 연금 합금을 고집해 정통 단조를 따르는 파밀리아에서 겉돕니다. 실패도 웃어넘기지만 작품에는 타협이 없습니다.",
+   quotes:["아하하, 또 깨졌네! 괜찮아, 왜 깨졌는지 알았으니까!"], where:"동부 공방가 끝의 화덕"},
+  {id:"brynhild", group:"candidate", code:"BR", c:"free", name:"브륀힐데 힌다르", ep:"방패처녀",
+   meta:["무소속 용병, 4T","위그드라실 출신, 전 발키리"],
+   blurb:"버리라는 오딘의 명을 어기고 부대를 지켰다가 맹약을 잃고 추방된 방패 전사입니다. 말보다 몸이 먼저 앞에 섭니다. 대가 이상의 호의는 받지 않으려 합니다.",
+   quotes:["...뒤에 있어."], where:"서부 환락가의 선술집"},
+
+  {id:"astrid", group:"staff", code:"AS", c:"thor", name:"아스트리드 토르발스도티르", ep:"굉뢰(轟雷)",
+   meta:["무투학부장, 9T","토르 파밀리아 단장","위그드라실 출신"],
+   blurb:"생도 시절 랭커 결정전에서 상대를 죽일 뻔해 '살상 금지' 규칙을 낳은 장본인입니다. 그 뒤로 무기를 봉인하고 맨손으로 싸웁니다. '나를 넘어뜨리면 소원 하나'를 걸었지만 아직 무패입니다.",
+   quotes:["좋아, 아직 서 있네! 다시 덤벼, 꼬맹이!"]},
+  {id:"theo", group:"staff", code:"TO", c:"hecate", name:"테오 클레이스", ep:"삼도(三道)",
+   meta:["마술학부 공동 학부장, 8T","헤카테 파밀리아 간부","델포이아 출신, 오전 이론"],
+   blurb:"영창을 칠판에 문장으로 해부하는 냉소적인 완벽주의자입니다. 말끝마다 남을 정정합니다. 맹약 때 세 길 중 어디로 갈지 묻는 헤카테에게 '셋 다'라고 답해 [삼도]라 불립니다. 세이드만은 공식으로 적을 수 없어 피아와 자주 부딪힙니다.",
+   quotes:["영창은 기도가 아니라 문장이다. 한 글자만 틀려도 문은 안 열려."]},
+  {id:"pia", group:"staff", code:"PI", c:"freyja", name:"피아 브리싱", ep:"금루(金淚)",
+   meta:["마술학부 공동 학부장, 8T","프레이야 파밀리아 간부","위그드라실 출신, 오후 실기"],
+   blurb:"프레이야 파밀리아 최고의 세이드 술사입니다. 생도를 '얘'라 부르며 잘 쓰다듬는 느긋한 낭만가입니다. 사람의 운명을 실로 엿봅니다.",
+   quotes:["외우지 마. 원해. 노래는 원하는 만큼만 대답해 주니까."]},
+  {id:"kyrene", group:"staff", code:"KY", c:"artemis", name:"키레네 아그로테라", ep:"은랑(銀狼)",
+   meta:["수렵학부장, 8T","아르테미스 파밀리아 출신(은퇴)"],
+   blurb:"부상으로 은퇴한 사냥꾼입니다. 추적보다 귀환을 먼저 가르치고, 귀환 기한을 어긴 생도에게 가장 엄격합니다. 회색 사냥개 두 마리와 다니며 길드 수색대를 자주 이끕니다.",
+   quotes:["쏘기 전에 돌아갈 길부터 말해."]},
+  {id:"glaucke", group:"staff", code:"GL", c:"athena", name:"글라우케 팔라디아", ep:"묘수(妙手)",
+   meta:["전술학부장, 8T","아테나 파밀리아 부단장","델포이아 출신"],
+   blurb:"표정이 거의 없는 냉미녀 군사입니다. 생도에게도 존대하고, 그녀가 웃으면 상대는 이미 진 판입니다. 과제마다 '실패했을 때의 계획'을 함께 내게 합니다. 백 수 앞을 읽지만 외모 칭찬에는 대비책이 없습니다.",
+   quotes:["좋은 계획이네요. 그럼, 이게 실패하면요?"]},
+  {id:"paian", group:"staff", code:"PA", c:"asclepius", name:"파이안 에피다우로스", ep:"몽진(夢診)",
+   meta:["치유학부 공동 학부장, 7T","아스클레피오스 파밀리아 간부","지상 치료·약학"],
+   blurb:"환자를 재워 숨과 꿈으로 병을 읽는 다정한 의사입니다. 흰 뱀 히기에이아가 목도리처럼 감겨 있습니다. 남의 몸은 끝까지 챙기면서 자기 몸은 방치해 아무 데서나 잠듭니다. 실종 3년이 지난 모험가의 사망 판정도 그의 일입니다.",
+   quotes:["쉿. 깨우지 마. 지금 병이 말하는 중이야."], where:"남부 치료원"},
+  {id:"tiye", group:"staff", code:"TY", c:"sekhmet", name:"티예 레온토폴리스", ep:"홍사(紅獅)",
+   meta:["치유학부 공동 학부장, 8T","세크메트 파밀리아 간부","카르나크 출신, 미궁 응급·해독"],
+   blurb:"시끄럽고 거침없는 전장 의사입니다. 생도를 16층 헤스티온 치유소로 끌고 내려가 실전 응급 처치를 시킵니다. 싸움이 끝나고 붉은 맥주를 마시면 나른하게 기대 오는 고양이가 됩니다.",
+   quotes:["비명 지를 힘 있으면 지혈부터 해!"], where:"16층 헤스티온의 치유소"},
+  {id:"eukleia", group:"staff", code:"EU", c:"hephaestus", name:"에우클레이아 렘노스", ep:"철화(鐵花)",
+   meta:["제작학부 공동 학부장, 8T","헤파이스토스 파밀리아 단장","단조"],
+   blurb:"말보다 망치가 먼저인 장인입니다. 망치 소리로 사람을 판단하고, 최고의 칭찬은 '쓸 만하네'입니다. 작품에 이름 각인을 허락하는 것도 그녀의 몫입니다. 칭찬을 받으면 귀까지 빨개져 오히려 화를 냅니다.",
+   quotes:["말로 하지 마. 두드려서 보여 줘."]},
+  {id:"nefer", group:"staff", code:"NF", c:"ptah", name:"네페르 멤피스", ep:"금필(金筆)",
+   meta:["제작학부 공동 학부장, 7T","프타 파밀리아 간부","카르나크 출신, 각문 공예"],
+   blurb:"한마디가 정확한 냉미남 각문 공예가입니다. 획 하나가 틀리면 처음부터 다시 새기게 합니다. 메리트의 친오빠로, 헤파이스토스로 간 동생에게 냉정하게 굽니다.",
+   quotes:["말은 새기는 것이다. 함부로 꺼내지 마라."]},
+  {id:"maia", group:"staff", code:"MA", c:"hermes", name:"마이아 아고라이아", ep:"비각(飛脚)",
+   meta:["지원학부장, 7T","헤르메스 파밀리아 간부","서포터 출신"],
+   blurb:"서포터 출신 유일의 학부장입니다. 생도를 '귀염둥이'라 부르며 놀리는 능글맞은 누님으로, 흥정과 지름길의 달인입니다. 누가 동료를 두고 왔을 때만 웃음이 사라집니다.",
+   quotes:["어머, 귀염둥이. 그렇게 싸서 살아 돌아올 생각이야?"]},
+  {id:"danae", group:"guild", code:"DN", c:"guild", name:"다나에 에우노미아", ep:"중앙 길드 담당관",
+   meta:["신입·소규모 파밀리아 전담 창구"],
+   blurb:"창구 앞 줄이 늘 가장 긴 담당관입니다. 규정은 끝까지 친절히 설명하지만 남의 사정은 절대 말하지 않습니다. 가장 많이 알고, 가장 적게 말합니다.",
+   quotes:["규정 3조부터 다시 설명해 드릴게요. 천천히, 끝까지요."], where:"거탑 중층, 길드 창구"},
+
+  {id:"tiamat", group:"guest", locked:true, code:"", c:"guest", name:"티아마트", ep:"만룡(萬龍)의 어머니",
+   meta:["곧 찾아올 손님"],
+   blurb:"동방의 옛 신화에서 왔다는 원초의 바다와 혼돈의 여신. 그 신화의 나라와 신들은 모두 사라졌고, 그녀와 그녀를 어머니라 부르는 이들만 남았다고 합니다.",
+   quotes:[]},
+  {id:"arciel", group:"guest", locked:true, code:"", c:"guest", name:"아르시엘", ep:"쌍심(雙心)",
+   meta:["곧 찾아올 손님"],
+   blurb:"두 개의 심장을 품었다는 용. 영웅담 이야기만 나오면 눈을 반짝인다고 합니다.",
+   quotes:[]},
+  {id:"luciel", group:"guest", locked:true, code:"", c:"guest", name:"루시엘", ep:"공심(空心)",
+   meta:["곧 찾아올 손님"],
+   blurb:"언니와 꼭 닮은 얼굴에, 언니와는 다른 색의 눈을 가진 용.",
+   quotes:[]}
+];
+const GROUPS = [
+  ["god","주신","도시의 파밀리아를 이끄는 신들. 판테온의 규약에 따라 미궁에는 내려가지 않습니다."],
+  ["student","생도","아카데미아의 랭커와 주요 생도들."],
+  ["candidate","권속 후보","당신의 파밀리아에 들어올 수도 있는 사람들. 영입은 당신이 정합니다."],
+  ["staff","교수진","각 파밀리아가 파견한 학부장들. 7~9T의 상위 모험가입니다."],
+  ["guild","중앙 길드","어느 파밀리아에도 속하지 않는 집행 기관의 사람들."],
+  ["guest","곧 찾아올 손님","아직 델포이아에 닿지 않은 이들. Coming soon."]
+];
+
+/* ---------------- 도시 구역 ---------------- */
+const REGIONS = {
+  center:{name:"중앙", tag:"거탑, 중앙 길드, 아카데미아 본관",
+    items:["대미궁 입구(대공동)를 틀어막은 거탑. 상층부에 판테온, 중층부에 길드 광장, 하층부에 강하 관문이 있습니다.","하데스 파밀리아의 사유 수직갱을 빼면 미궁으로 내려가는 유일한 합법 통로입니다.","강하 관문 바로 앞에 헤르메스 파밀리아의 '날개의 역참'. 지상과 안전지대를 잇는 보급과 전령이 이곳에서 출발합니다.","거탑 남쪽 세 갈래 길목에 헤카테 파밀리아의 '열쇠의 집'이 있습니다. 해주소를 겸해 밤에도 횃불이 꺼지지 않습니다."],
+    who:"다나에, 칼리스토(길드 광장), 헤르메스, 헤카테"},
+  north:{name:"북부 제1학구", tag:"고지대. 빈민가가 없는 유일한 부촌",
+    items:["제우스 파밀리아의 흰 대저택 '천공관'. 총학생회의 본거지입니다.","하데스 파밀리아의 검은 첨탑 '명왕관'. 하층으로 바로 이어지는 전용 수직갱이 있습니다.","헤라 파밀리아의 '헤라이온'. 신전 곁에 고아원과 요양원이 있습니다.","고지대 끝 절벽 위의 옛 성채. 오래 비어 있었지만, 요즘 밤마다 불이 켜진다는 소문이 돕니다."],
+    who:"이리나, 헬레네, 자그레우스, 멜리노에, 제우스, 하데스, 헤라"},
+  east:{name:"동부 제2학구", tag:"상업지구",
+    items:["아테나 파밀리아의 대도서관과 '올빼미의 둥지'. 계층주 토벌 기록을 찾을 수 있습니다.","헤파이스토스 파밀리아의 공방가와 '장인의 집'. 외진 끝에 메리트의 화덕이 있습니다.","공방가 끝의 '카르나크 거리'. 세크메트 파밀리아의 '사자의 집'과 프타 파밀리아의 석조 공방 '멘네페르'가 담 하나를 사이에 두고 붙어 있습니다.","경매장과 그 위층의 '석류관'(페르세포네 파밀리아).","프레이야 파밀리아의 '세스룸니르'. 부르지 않아도 손님이 끊이지 않습니다."],
+    who:"메리트, 페르세포네, 프레이야, 아테나, 헤파이스토스, 세크메트, 프타"},
+  south:{name:"남부 제3학구", tag:"농경지구",
+    items:["데메테르 파밀리아의 온실과 밭, '풍요의 집'.","아스클레피오스 파밀리아의 치료원 '아스클레피에이온'. 환자를 재워 꿈으로 병을 읽는 '몽진'의 본산입니다.","외곽의 작은 꽃집, 코레 파밀리아.","도시 안의 유일한 숲 '달의 숲'(아르테미스 파밀리아). 숲 안 거처에는 남자가 들어갈 수 없습니다."],
+    who:"코레, 데메테르, 아르테미스, 아스클레피오스, 파이안"},
+  west:{name:"서부 제4학구", tag:"지하 항구와 환락가. 교칙이 닿지 않는 곳",
+    items:["포세이돈 파밀리아의 거대 오두막 '해신관'.","지하 항구 위의 '천둥 홀'(토르 파밀리아). 밤마다 연회와 술 대결이 벌어집니다.","환락가의 선술집에는 일용 호위를 구하는 이들이 모입니다."],
+    who:"리온, 리테, 브륀힐데, 포세이돈, 토르"},
+  slum:{name:"빈민가", tag:"북부를 뺀 동·남·서부 바깥",
+    items:["도시 외곽에 띠처럼 늘어선 구역.","도태된 생도와 급외 파밀리아가 모여 삽니다."],
+    who:""}
+};
+
+/* ---------------- 대미궁 단면 ---------------- */
+const STRATA = [
+  {fl:"거탑 상층부", nm:"판테온", sub:"주신 이사회", bg:"#2A3566", items:["구름 위로 솟은 최고층. 주신들의 거처이자 판테온의 회의장입니다."]},
+  {fl:"거탑 중층부", nm:"중앙 길드", sub:"무력 개입 금지 구역", bg:"#26305C", items:["퀘스트 수주, 마석 정산, 장비 경매가 이루어지는 광장입니다."]},
+  {fl:"거탑 하층부", nm:"강하 관문", sub:"미궁 1층과 연결", bg:"#222A50", items:["마력 방벽이 상시 가동되어 몬스터의 지상 진출을 막습니다."]},
+  {fl:"1~15층", nm:"상층", sub:"권장 2~3T", bg:"#1D3A3A", boss:"기간테스 4T",
+   items:["1~5층 '젖은 회랑': 좁은 외길. 고블린, 코볼트, 킬러 래빗. 신입의 실습장.","6~10층 '갈림굴': 갈림길과 막다른 굴. 지도가 필수이고 매복이 잦습니다.","11~14층 '거인의 평원': 짙은 안개 속의 오크와 외눈 거한.","15층 '거인의 문': 키 6m의 거인 기간테스. 두 발이 땅에 닿아 있는 동안 상처가 아뭅니다. 토벌되면 14일 뒤 다시 살아납니다."],
+   res:"하급 마석, 발광 이끼, 철광, 약초"},
+  {fl:"16층", nm:"헤스티온", sub:"안전지대, 거점 마을", bg:"#3A2C17", thin:true,
+   items:["상층을 넘은 모험가들이 세운 마을. 길드 출장소, 여관, 치유소, 암시장. 물가는 지상의 세 배입니다.","치유소는 세크메트 파밀리아가 꾸리고, 석조 건물은 프타 파밀리아가 지었습니다.","급외와 1급이 한 식탁에 앉는 드문 곳이라 소문과 거래가 오갑니다."]},
+  {fl:"17~28층", nm:"중층", sub:"권장 4~6T", bg:"#173550", boss:"레드 와이번 6T",
+   items:["17~22층 '석순 숲': 종유석이 숲처럼 들어찬 미로. 리자드맨, 하피, 헬하운드.","23~27층 '수몰 회랑': 지저호의 초입. 수위가 수시로 변해 퇴로가 끊길 수 있습니다.","28층 '용의 굴뚝': 수직 공동을 날며 화염을 뿜는 비룡. 땅으로 끌어내릴 수단이 필요합니다. 토벌되면 21일 뒤 다시 살아납니다.","여기서부터 당일 귀환이 불가능합니다."],
+   res:"중급 마석, 수정, 지저호의 수산물"},
+  {fl:"29층", nm:"님프의 샘", sub:"안전지대, 야영지", bg:"#1A4650", thin:true,
+   items:["맑은 호수와 수정 동굴. 샘물은 가벼운 상처를 낫게 합니다. 포세이돈 파밀리아의 전초기지가 있습니다."]},
+  {fl:"30~44층", nm:"하층", sub:"권장 5~7T", bg:"#2B2940", boss:"미노타우르스 8T",
+   items:["누가 지었는지 모를 석조 미로. 하루에 한 번 벽이 움직여 어제의 지도가 통하지 않습니다.","30~37층 '석조 회랑': 함정과 닫히는 문. 가고일, 리빙 아머.","38~43층 '기둥의 전당': 대열을 짜고 움직이는 우두 병사와 바실리스크.","44층 '왕좌의 미로': 미로 전체가 미노타우르스의 사냥터. 흩어지면 끝입니다. 토벌되면 30일 뒤 다시 살아납니다.","하데스 파밀리아의 전용 수직갱이 이 층대에 닿아 있습니다."],
+   res:"상급 마석, 미스릴 원석, 고대 유물"},
+  {fl:"45층", nm:"아리아드네 거점", sub:"안전지대, 원정 보급기지", bg:"#3B3420", thin:true,
+   items:["1급 파밀리아들의 원정 보급기지. 미로를 빠져나오는 길잡이 실 '아리아드네의 실'을 여기서 줍니다. 허가받은 자만 머뭅니다."]},
+  {fl:"46~60층", nm:"심층", sub:"권장 6~8T", bg:"#4A1F1C", boss:"홍룡 9T",
+   items:["용암이 흐르는 화산 지대. 열기만으로 체력이 깎입니다.","46~52층 '불의 강': 용암 하천과 현무암 다리. 샐러맨더, 드레이크.","53~59층 '용의 묘역': 용의 뼈가 지형을 이루고 용아병이 길을 막습니다.","60층 '붉은 옥좌': 사람의 말을 하는 완전한 용. 1급 파밀리아 연합 원정으로만 토벌 기록이 있습니다.","원정대가 아니면 허가가 나지 않습니다. 채굴권은 하데스 파밀리아가 쥐고 있습니다."],
+   res:"최상급 마석, 용의 비늘과 뼈, 화염석"},
+  {fl:"61층", nm:"타르타로스의 문", sub:"판테온이 봉인한 관문", bg:"#2C1012", thin:true,
+   items:["수비대 외에는 들어갈 수 없습니다."]},
+  {fl:"62층~", nm:"타르타로스", sub:"권장 8~10T", bg:"#150A10",
+   items:["신대 전쟁에서 패한 티탄들의 감옥이자 묘지. 썩어 가는 거신의 시체가 그대로 미궁을 이룹니다.","부패한 숨이 정신을 갉아먹습니다.","최하층에는 모든 던전의 마지막 재앙이 기다린다고 전해집니다."]}
+];
+
+/* ---------------- 유틸 ---------------- */
+const $ = (s, r=document) => r.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+function portraitURL(ch){
+  if (PORTRAIT[ch.id]) return PORTRAIT[ch.id];
+  if (IMG_BASE && ch.code) return IMG_BASE.replace(/\/?$/, "/") + ch.code + "_1.webp";
+  return "";
+}
+function picHTML(ch){
+  if (ch.locked) return `<div class="ph"><span>?</span></div><span class="soon">COMING SOON</span>`;
+  const url = portraitURL(ch);
+  const ph = `<div class="ph"><span>${esc(ch.name.charAt(0))}</span></div>`;
+  return url ? `${ph}<img src="${esc(url)}" alt="" loading="lazy" onerror="this.remove()">` : ph;
+}
+
+/* ---------------- 표지 미궁 ---------------- */
+function drawMaze(){
+  const svg = $("#maze"); if (!svg) return;
+  let seed = 1572;
+  const rnd = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+  const NS = "http://www.w3.org/2000/svg";
+  const rings = [30, 54, 78, 102, 126, 150, 174, 198, 222, 246];
+  const P = (r,a) => [ (r*Math.cos(a)).toFixed(2), (r*Math.sin(a)).toFixed(2) ];
+  const defs = `<defs><radialGradient id="halo"><stop offset="0" stop-color="#E8D29A" stop-opacity=".55"/><stop offset="1" stop-color="#E8D29A" stop-opacity="0"/></radialGradient></defs>`;
+  let out = defs + `<circle class="halo" r="70"/>`;
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  rings.forEach((r, i) => {
+    const gaps = 1 + Math.floor(rnd() * (i < 3 ? 2 : 3));
+    const gapLen = 18 / r;
+    const starts = [];
+    for (let g = 0; g < gaps; g++) starts.push(rnd() * Math.PI * 2);
+    starts.sort((a,b)=>a-b);
+    for (let g = 0; g < gaps; g++){
+      const a0 = starts[g] + gapLen, a1 = (g+1 < gaps ? starts[g+1] : starts[0] + Math.PI*2);
+      if (a1 - a0 < 0.05) continue;
+      const [x0,y0] = P(r,a0), [x1,y1] = P(r,a1);
+      const large = (a1 - a0) > Math.PI ? 1 : 0;
+      out += `<path class="w${reduce?"":" draw"}" pathLength="1" style="animation-delay:${(i*0.11).toFixed(2)}s" d="M${x0} ${y0}A${r} ${r} 0 ${large} 1 ${x1} ${y1}"/>`;
+    }
+    if (i < rings.length - 1){
+      const next = rings[i+1];
+      const walls = 2 + Math.floor(rnd() * (2 + i));
+      for (let w = 0; w < walls; w++){
+        const a = rnd() * Math.PI * 2;
+        const [x0,y0] = P(r,a), [x1,y1] = P(next,a);
+        out += `<path class="w${reduce?"":" draw"}" pathLength="1" style="animation-delay:${(i*0.11+0.25).toFixed(2)}s" d="M${x0} ${y0}L${x1} ${y1}"/>`;
+      }
+    }
+  });
+  out += `<circle class="core" r="9"/><circle r="16" fill="none" stroke="#E8D29A" stroke-width="1" opacity=".7"/>`;
+  svg.innerHTML = out;
+}
+
+/* ---------------- 도시 지도 ---------------- */
+function drawCity(){
+  const svg = $("#city"); if (!svg) return;
+  const cx = 260, cy = 278, R0 = 56, R1 = 176, R2 = 210;
+  const pt = (r,a) => [cx + r*Math.cos(a), cy + r*Math.sin(a)];
+  const sector = (r0,r1,a0,a1) => {
+    const [x0,y0]=pt(r1,a0),[x1,y1]=pt(r1,a1),[x2,y2]=pt(r0,a1),[x3,y3]=pt(r0,a0);
+    const L = (a1-a0) > Math.PI ? 1 : 0;
+    return `M${x0} ${y0}A${r1} ${r1} 0 ${L} 1 ${x1} ${y1}L${x2} ${y2}A${r0} ${r0} 0 ${L} 0 ${x3} ${y3}Z`;
+  };
+  const d2r = d => d*Math.PI/180;
+  const secs = [
+    ["north", -135, -45, "#2F3F7A"],
+    ["east",  -45,  45,  "#3A3466"],
+    ["south",  45, 135,  "#2E4A44"],
+    ["west",  135, 225,  "#24435E"]
+  ];
+  let s = "";
+  s += `<text class="nation" x="${cx}" y="22" text-anchor="middle">북쪽, 위그드라실</text>`;
+  s += `<text class="nation" x="${cx}" y="532" text-anchor="middle">남쪽, 카르나크</text>`;
+  // 빈민가 고리 (북부 제외)
+  s += `<path class="sec" data-r="slum" tabindex="0" role="button" aria-label="빈민가" fill="#2A2A3C" d="${sector(R1, R2, d2r(-45), d2r(225))}"/>`;
+  secs.forEach(([id,a0,a1,fill]) => {
+    s += `<path class="sec" data-r="${id}" tabindex="0" role="button" aria-label="${REGIONS[id].name}" fill="${fill}" d="${sector(R0, R1, d2r(a0), d2r(a1))}"/>`;
+  });
+  s += `<circle class="sec" data-r="center" tabindex="0" role="button" aria-label="중앙" cx="${cx}" cy="${cy}" r="${R0}" fill="#5A4A22"/>`;
+  s += `<circle cx="${cx}" cy="${cy}" r="12" fill="#E8D29A" pointer-events="none"/>`;
+  const lab = (id, r, a, line2) => {
+    const [x,y] = pt(r, d2r(a));
+    return `<text x="${x}" y="${y}" text-anchor="middle" font-size="21">${REGIONS[id].name.split(" ")[0]}</text>` +
+           (line2 ? `<text class="small" x="${x}" y="${y+20}" text-anchor="middle">${line2}</text>` : "");
+  };
+  s += lab("north",118,-90,"고지대");
+  s += lab("east",118,0,"상업지구");
+  s += lab("south",118,90,"농경지구");
+  s += lab("west",118,180,"항구·환락가");
+  s += `<text x="${cx}" y="${cy+38}" text-anchor="middle" font-size="16">거탑</text>`;
+  const [sx,sy] = pt(193, d2r(90));
+  s += `<text class="small" x="${sx}" y="${sy+4}" text-anchor="middle">빈민가</text>`;
+  svg.innerHTML = s;
+
+  const chips = $("#region-chips");
+  chips.innerHTML = ["center","north","east","south","west","slum"].map(id =>
+    `<button class="chip" data-r="${id}" aria-pressed="false">${REGIONS[id].name.split(" ")[0]}</button>`).join("");
+
+  const show = id => {
+    const r = REGIONS[id];
+    $("#region").innerHTML = `<h4>${esc(r.name)}</h4><div class="tag">${esc(r.tag)}</div><ul>${r.items.map(i=>`<li>${esc(i)}</li>`).join("")}</ul>${r.who?`<div class="who">이곳에서 만날 수 있는 인물: ${esc(r.who)}</div>`:""}`;
+    svg.querySelectorAll(".sec").forEach(p => p.classList.toggle("on", p.dataset.r === id));
+    chips.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", String(c.dataset.r === id)));
+  };
+  svg.addEventListener("click", e => { const p = e.target.closest(".sec"); if (p) show(p.dataset.r); });
+  svg.addEventListener("keydown", e => { const p = e.target.closest(".sec"); if (p && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); show(p.dataset.r); } });
+  chips.addEventListener("click", e => { const c = e.target.closest(".chip"); if (c) show(c.dataset.r); });
+  show("center");
+}
+
+/* ---------------- 대미궁 단면 ---------------- */
+function drawDescent(){
+  const box = $("#descent"); if (!box) return;
+  box.innerHTML = STRATA.map(s => `
+    <details class="stratum${s.thin?" thin":""}" style="--bg:${s.bg}">
+      <summary>
+        <span class="fl">${esc(s.fl)}</span>
+        <span class="nm">${esc(s.nm)}<small>${esc(s.sub)}</small></span>
+        ${s.boss?`<span class="boss">${esc(s.boss)}</span>`:""}
+      </summary>
+      <div class="in"><ul>${s.items.map(i=>`<li>${esc(i)}</li>`).join("")}</ul>${s.res?`<p class="muted" style="margin:.6em 0 0">자원: ${esc(s.res)}</p>`:""}</div>
+    </details>`).join("");
+}
+
+/* ---------------- 인물 ---------------- */
+function cardHTML(ch){
+  return `
+    <button class="card${ch.locked?" locked":""}" data-id="${ch.id}" style="--c:var(--${ch.c})">
+      <div class="pic">${picHTML(ch)}</div>
+      <div><div class="ep">${esc(ch.ep)}</div><div class="nm">${esc(ch.name)}</div><div class="rl">${esc(ch.meta[0])}</div></div>
+    </button>`;
+}
+function drawPeople(){
+  const box = $("#people-groups"), chips = $("#people-chips");
+  chips.innerHTML = [["all","전체"], ...GROUPS.map(g => [g[0], g[1]])].map(([id,label]) =>
+    `<button class="chip" data-g="${id}" aria-pressed="${id==="all"}">${label}</button>`).join("");
+  box.innerHTML = GROUPS.map(([id,label,desc]) => {
+    const list = CHARS.filter(c => c.group === id);
+    return `<section class="pgroup ${id}" data-g="${id}">
+      <header><h3>${esc(label)}</h3><span class="count">${list.length}명</span><p>${esc(desc)}</p></header>
+      <div class="people">${list.map(cardHTML).join("")}</div>
+    </section>`;
+  }).join("");
+  chips.addEventListener("click", e => {
+    const c = e.target.closest(".chip"); if (!c) return;
+    const g = c.dataset.g;
+    chips.querySelectorAll(".chip").forEach(x => x.setAttribute("aria-pressed", String(x === c)));
+    box.querySelectorAll(".pgroup").forEach(sec => { sec.hidden = !(g === "all" || sec.dataset.g === g); });
+  });
+  box.addEventListener("click", e => { const card = e.target.closest(".card"); if (card) openChar(card.dataset.id, card); });
+}
+let lastCard = null;
+function openChar(id, from){
+  const ch = CHARS.find(c => c.id === id); if (!ch) return;
+  lastCard = from || null;
+  const body = $("#dlg-body");
+  body.style.setProperty("--c", `var(--${ch.c})`);
+  body.innerHTML = `
+    <div class="pic" style="--c:var(--${ch.c})">${picHTML(ch)}</div>
+    <div class="txt">
+      <div class="ep">${esc(ch.ep)}</div>
+      <h3 id="dlg-name">${esc(ch.name)}</h3>
+      <ul class="meta">${ch.meta.map(m=>`<li>${esc(m)}</li>`).join("")}</ul>
+      <p>${esc(ch.blurb)}</p>
+      ${ch.quotes.map(q=>`<blockquote>"${esc(q)}"</blockquote>`).join("")}
+      ${ch.where?`<div class="where"><b>만나는 곳</b> ${esc(ch.where)}</div>`:""}
+      ${ch.locked?`<div class="soonline">COMING SOON</div>`:""}
+    </div>`;
+  const dlg = $("#dlg");
+  if (typeof dlg.showModal === "function") dlg.showModal(); else dlg.setAttribute("open","");
+}
+function closeDlg(){
+  const dlg = $("#dlg");
+  if (dlg.open) { if (typeof dlg.close === "function") dlg.close(); else dlg.removeAttribute("open"); }
+}
+
+/* ---------------- 탭 ---------------- */
+const PANELS = ["overview","world","map","people"];
+function selectTab(id, focus){
+  if (!PANELS.includes(id)) id = "overview";
+  PANELS.forEach(p => {
+    $("#"+p).hidden = (p !== id);
+    const t = $("#t-"+p);
+    t.setAttribute("aria-selected", String(p === id));
+    t.tabIndex = (p === id) ? 0 : -1;
+  });
+  if (focus) $("#t-"+id).focus();
+}
+function goTab(id, scroll){
+  selectTab(id);
+  if (location.hash !== "#"+id) history.replaceState(null, "", "#"+id);
+  if (scroll) {
+    const top = document.querySelector(".tabs").getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({top, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
+  }
+}
+
+/* ---------------- 시작 ---------------- */
+document.addEventListener("DOMContentLoaded", () => {
+  // 표지 이미지·로고
+  if (HERO_IMG){ $(".hero").classList.add("has-img"); $(".hero-img").style.backgroundImage = `url("${HERO_IMG}")`; }
+  if (LOGO_IMG){ $("#title").innerHTML = `<img class="logo" src="${esc(LOGO_IMG)}" alt="미궁도시 델포이아">`; }
+  drawMaze(); drawCity(); drawDescent(); drawPeople();
+
+  // 탭
+  const tablist = $(".tablist");
+  tablist.addEventListener("click", e => { const t = e.target.closest(".tab"); if (t) goTab(t.getAttribute("aria-controls"), true); });
+  tablist.addEventListener("keydown", e => {
+    const tabs = [...tablist.querySelectorAll(".tab")];
+    const i = tabs.indexOf(document.activeElement); if (i < 0) return;
+    let n = null;
+    if (e.key === "ArrowRight") n = (i+1) % tabs.length;
+    if (e.key === "ArrowLeft") n = (i-1+tabs.length) % tabs.length;
+    if (e.key === "Home") n = 0;
+    if (e.key === "End") n = tabs.length-1;
+    if (n !== null){ e.preventDefault(); goTab(tabs[n].getAttribute("aria-controls")); tabs[n].focus(); }
+  });
+  document.querySelectorAll("[data-go]").forEach(a => a.addEventListener("click", e => { e.preventDefault(); goTab(a.dataset.go, true); }));
+  const fromHash = () => { const h = decodeURIComponent(location.hash.slice(1)); selectTab(PANELS.includes(h) ? h : "overview"); };
+  window.addEventListener("hashchange", fromHash);
+  fromHash();
+
+  // 대화상자
+  $("#dlg-x").addEventListener("click", closeDlg);
+  $("#dlg").addEventListener("click", e => { if (e.target === e.currentTarget) closeDlg(); });
+  $("#dlg").addEventListener("close", () => { if (lastCard) lastCard.focus(); });
+
+  // 음악
+  if (BGM_URL){
+    const b = $("#bgm"); b.hidden = false;
+    const audio = new Audio(BGM_URL); audio.loop = true; audio.volume = .5;
+    b.addEventListener("click", () => {
+      if (audio.paused){ audio.play().then(()=>{ b.setAttribute("aria-pressed","true"); b.textContent = "음악 끄기"; }).catch(()=>{}); }
+      else { audio.pause(); b.setAttribute("aria-pressed","false"); b.textContent = "음악 켜기"; }
+    });
+  }
+});
+})();
+</script>
+</body>
+</html>
